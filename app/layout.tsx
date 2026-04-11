@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Shion Photography | Seoul',
-  description: 'Premium photography booking platform in Seoul.',
+  title: 'SHION STUDIO | Professional K-Photography in Seoul',
+  description: 'Capture your journey with premium, cinematic photo shoots in Seoul. Tailored for travelers who want to preserve their Korean memories with professional aesthetic results.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

@@ -5,7 +5,7 @@ import { Hexagon, Search, Scan, Aperture } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function Navbar() {
-  const { user, login, logout } = useAuth();
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-start px-6 py-6 pointer-events-none">
@@ -16,10 +16,10 @@ export default function Navbar() {
         </Link>
         <div className="h-12 bg-white rounded-full flex items-center px-2 shadow-sm border border-black/5">
           <Link href="#explore" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
-            Explore
+            Locations
           </Link>
-          <Link href="#careers" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
-            Careers
+          <Link href="#portfolio" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
+            Portfolio
           </Link>
         </div>
       </div>
@@ -29,7 +29,7 @@ export default function Navbar() {
         <Search size={18} className="text-gray-400 mr-3" />
         <input 
           type="text" 
-          placeholder="Search Cosmos..." 
+          placeholder="Search location or style..." 
           className="flex-1 bg-transparent outline-none text-sm text-black placeholder:text-gray-400"
         />
         <div className="flex items-center gap-3 text-gray-400">
@@ -45,17 +45,17 @@ export default function Navbar() {
             <Link href="/profile" className="text-sm font-medium text-black hover:text-gray-600 transition-colors">
               Profile
             </Link>
-            <button onClick={logout} className="h-12 px-6 bg-black text-white rounded-full text-sm font-medium hover:bg-black/80 transition-colors shadow-sm">
+            <button onClick={signOut} className="h-12 px-6 bg-black text-white rounded-full text-sm font-medium hover:bg-black/80 transition-colors shadow-sm inline-flex items-center justify-center">
               Log out
             </button>
           </>
         ) : (
           <>
-            <button onClick={login} className="text-sm font-medium text-black hover:text-gray-600 transition-colors">
+            <Link href="/book" className="text-sm font-medium text-black hover:text-gray-600 transition-colors">
               Login
-            </button>
-            <Link href="/book" className="h-12 px-6 bg-black text-white rounded-full text-sm font-medium hover:bg-black/80 transition-colors shadow-sm">
-              Sign up
+            </Link>
+            <Link href="/book" className="h-12 px-6 bg-black text-white rounded-full text-sm font-medium hover:bg-black/80 transition-colors shadow-sm inline-flex items-center justify-center">
+              Book now
             </Link>
           </>
         )}

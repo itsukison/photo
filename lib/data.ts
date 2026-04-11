@@ -1,8 +1,11 @@
+import { supabase } from '@/lib/supabase';
+
 export type Plan = {
   id: string;
+  slug: string;
   name: string;
   price: number;
-  duration: number; // in minutes
+  duration: number;
   description: string;
 };
 
@@ -14,29 +17,49 @@ export type Location = {
 
 export type Addon = {
   id: string;
+  slug: string;
   name: string;
   price: number;
 };
 
-export const PLANS: Plan[] = [
-  { id: 'quick', name: 'Seoul Quick Shot', price: 120, duration: 50, description: 'Perfect for solo travelers wanting quick, aesthetic memories.' },
-  { id: 'fisheye', name: 'Fish-Eye Wanderer', price: 160, duration: 90, description: 'Creative, wide-angle shots capturing the vibrant city energy.' },
-  { id: 'golden', name: 'Golden Hour Session', price: 200, duration: 120, description: 'Warm, cinematic portraits during sunset.' },
-  { id: 'neon', name: 'Neon Nights', price: 180, duration: 90, description: 'Cyberpunk-inspired night photography in bustling districts.' },
-  { id: 'full', name: 'Full Seoul Experience', price: 280, duration: 180, description: 'Comprehensive shoot across multiple locations.' },
-];
+export async function fetchPlans(): Promise<Plan[]> {
+  const { data, error } = await supabase
+    .from('plans')
+    .select('id, slug, name, price, duration_minutes, description, sort_order')
+    .order('sort_order', { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((p) => ({
+    id: p.id as string,
+    slug: p.slug as string,
+    name: p.name as string,
+    price: p.price as number,
+    duration: p.duration_minutes as number,
+    description: (p.description as string) ?? '',
+  }));
+}
 
-export const LOCATIONS: Location[] = [
-  { id: 'myeongdong', name: 'Myeongdong', surcharge: 0 },
-  { id: 'hongdae', name: 'Hongdae', surcharge: 20 },
-  { id: 'hanriver', name: 'Han River', surcharge: 30 },
-  { id: 'bukchon', name: 'Bukchon Hanok Village', surcharge: 10 },
-  { id: 'gangnam', name: 'Gangnam', surcharge: 20 },
-];
+export async function fetchLocations(): Promise<Location[]> {
+  const { data, error } = await supabase
+    .from('locations')
+    .select('id, name, surcharge, sort_order')
+    .order('sort_order', { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((l) => ({
+    id: l.id as string,
+    name: l.name as string,
+    surcharge: l.surcharge as number,
+  }));
+}
 
-export const ADDONS: Addon[] = [
-  { id: 'express', name: 'Express Delivery (48h)', price: 40 },
-  { id: 'retouch', name: 'Skin & Face Retouch', price: 50 },
-];
-
-export const TIME_SLOTS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+export async function fetchAddons(): Promise<Addon[]> {
+  const { data, error } = await supabase
+    .from('addons')
+    .select('id, slug, name, price');
+  if (error) throw error;
+  return (data ?? []).map((a) => ({
+    id: a.id as string,
+    slug: a.slug as string,
+    name: a.name as string,
+    price: a.price as number,
+  }));
+}

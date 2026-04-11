@@ -2,10 +2,9 @@
 
 import Gallery from '@/components/Gallery';
 import Preloader from '@/components/Preloader';
-import { ArrowRight, Search, Play } from 'lucide-react';
+import { Search, Play } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PLANS } from '@/lib/data';
 import { useRef } from 'react';
 import { useScroll, useTransform, motion } from 'motion/react';
 
@@ -36,7 +35,7 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ['start start', 'end end'] as const
   });
 
   // Move hero content up like normal scroll
@@ -48,20 +47,20 @@ export default function Home() {
   const videoHeight = useTransform(scrollYProgress, [0, 0.5], ["30vh", "82vh"]);
   const videoBottom = useTransform(scrollYProgress, [0, 0.5], ["-22vh", "8vh"]);
   const videoBorderRadius = useTransform(scrollYProgress, [0, 0.5], ["24px", "32px"]);
-  
+
   // Fade in the text quickly as the image reaches full size
-  const videoContentOpacity = useTransform(scrollYProgress, [0.45, 0.5], [0, 1]);
+  const videoContentOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
   return (
     <main className="min-h-screen bg-[#fcfcfc] text-notion-text selection:bg-notion-text selection:text-white">
       <Preloader />
-      
+
       {/* Cosmos-style Hero Section with Scroll Animation */}
       <div ref={containerRef} className="h-[250vh] relative">
         <div className="sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center">
-          
+
           {/* Hero Content that fades out */}
-          <motion.div 
+          <motion.div
             style={{ opacity: heroOpacity, y: heroY }}
             className="absolute inset-0 flex flex-col items-center justify-center"
           >
@@ -94,24 +93,24 @@ export default function Home() {
             {/* Center Content */}
             <div className="relative z-10 flex flex-col items-center text-center px-6 -mt-24">
               <span className="text-sm font-bold tracking-[0.2em] uppercase mb-6 text-black">
-                COSMOS
+                SHION STUDIO
               </span>
-              <h1 className="text-[56px] md:text-[88px] leading-[1.05] font-normal tracking-tight mb-10 text-black">
-                Your space<br />for inspiration
+              <h1 className="text-[56px] md:text-[68px] leading-[1.05] font-normal tracking-tight mb-10 text-black">
+                Cinematic<br />Seoul Moments
               </h1>
-              
+
               <div className="flex items-center gap-4">
-                <Link 
-                  href="/book" 
+                <Link
+                  href="/book"
                   className="h-12 rounded-full bg-black text-white px-8 flex items-center justify-center text-sm font-medium hover:bg-black/80 transition-colors"
                 >
-                  Sign up
+                  Book a session
                 </Link>
-                <Link 
-                  href="#plans" 
+                <Link
+                  href="#plans"
                   className="h-12 rounded-full bg-white/80 backdrop-blur-sm border border-black/10 text-black px-8 flex items-center justify-center text-sm font-medium hover:bg-white transition-colors shadow-sm"
                 >
-                  Get the app
+                  View portfolio
                 </Link>
               </div>
             </div>
@@ -119,7 +118,7 @@ export default function Home() {
             {/* Bottom Text */}
             <div className="absolute bottom-[20vh] left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 text-sm font-medium text-gray-600 hover:text-black cursor-pointer transition-colors">
               <Play size={16} className="fill-current" />
-              <span>Watch our new film (ft. Odessa A&apos;zion)</span>
+              <span>Experience our craft</span>
             </div>
           </motion.div>
 
@@ -134,26 +133,26 @@ export default function Home() {
             className="absolute z-20 overflow-hidden flex items-center justify-center shadow-2xl"
           >
             {/* The expanded video/image content */}
-            <Image 
+            <Image
               src="https://picsum.photos/seed/fashionvideo/1920/1080"
               alt="Watch the film featuring Odessa A'zion"
               fill
               className="object-cover"
               referrerPolicy="no-referrer"
             />
-            <motion.div 
+            <motion.div
               style={{ opacity: videoContentOpacity }}
-              className="absolute inset-0 bg-black/20"
+              className="absolute inset-0 bg-black/40"
             >
               <div className="absolute inset-0 flex items-center justify-between px-12 md:px-24 text-white">
                 <div className="flex items-center gap-4 md:gap-6">
                   <Play size={56} className="fill-current" />
-                  <span className="text-4xl md:text-[56px] font-medium tracking-tight">Watch</span>
+                  <span className="text-4xl md:text-[56px] font-medium tracking-tight">Our</span>
                 </div>
-                <span className="text-4xl md:text-[56px] font-medium tracking-tight">the film</span>
+                <span className="text-4xl md:text-[56px] font-medium tracking-tight">Vision</span>
               </div>
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/90 text-sm font-medium">
-                featuring Odessa A&apos;zion
+                Seoul &apos;24 Collection
               </div>
             </motion.div>
           </motion.div>
@@ -163,19 +162,19 @@ export default function Home() {
 
       {/* Cosmos-style Showcase Section */}
       <section className="px-6 max-w-7xl mx-auto pb-24 pt-10">
-        <h2 className="text-4xl md:text-[56px] font-semibold tracking-tighter text-center mb-12 text-notion-text">
-          Every search opens a new world.
+        <h2 className="text-4xl md:text-[56px] font-medium tracking-tighter text-center mb-12 text-notion-text">
+          Every shot tells your unique story.
         </h2>
-        
+
         {/* Main Card */}
         <div className="relative w-full h-[400px] md:h-[600px] rounded-[32px] bg-[#452c2e] overflow-hidden shadow-sm">
-          
+
           {/* Left Image */}
           <div className="absolute left-[12%] top-[15%] bottom-[15%] w-[22%] rounded-sm overflow-hidden">
-            <Image 
-              src="https://picsum.photos/seed/fashion1/600/800" 
-              alt="Editorial" 
-              fill 
+            <Image
+              src="https://picsum.photos/seed/fashion1/600/800"
+              alt="Editorial"
+              fill
               className="object-cover"
               referrerPolicy="no-referrer"
             />
@@ -183,10 +182,10 @@ export default function Home() {
 
           {/* Center Image */}
           <div className="absolute left-[42%] top-[20%] bottom-[20%] w-[16%] rounded-sm overflow-hidden">
-            <Image 
-              src="https://picsum.photos/seed/fashion2/400/600" 
-              alt="Editorial" 
-              fill 
+            <Image
+              src="https://picsum.photos/seed/fashion2/400/600"
+              alt="Editorial"
+              fill
               className="object-cover"
               referrerPolicy="no-referrer"
             />
@@ -194,10 +193,10 @@ export default function Home() {
 
           {/* Right Image */}
           <div className="absolute right-0 top-0 bottom-0 w-[32%]">
-            <Image 
-              src="https://picsum.photos/seed/fashion3/800/1200" 
-              alt="Editorial" 
-              fill 
+            <Image
+              src="https://picsum.photos/seed/fashion3/800/1200"
+              alt="Editorial"
+              fill
               className="object-cover"
               referrerPolicy="no-referrer"
             />
@@ -206,15 +205,15 @@ export default function Home() {
           {/* Search Pill */}
           <div className="absolute left-[38%] top-1/2 -translate-y-1/2 w-[300px] h-14 rounded-full bg-gradient-to-r from-[#3a2224]/80 to-[#2a1a1c]/80 backdrop-blur-md border border-white/10 flex items-center px-6 gap-3 text-white shadow-2xl z-10">
             <Search size={18} className="text-white/80" />
-            <span className="text-base font-medium text-white/90">runway editorial</span>
+            <span className="text-base font-medium text-white/90">bukchon nights</span>
           </div>
         </div>
 
         {/* Bottom Text */}
         <div className="mt-16 text-center">
           <p className="text-xl md:text-[26px] text-notion-text-muted font-medium leading-snug tracking-tight">
-            Your collections, your references, your taste.<br />
-            Connected, searchable, yours.
+            Your style, your memories, your Seoul.<br />
+            Professionally captured, uniquely yours.
           </p>
         </div>
       </section>
@@ -224,8 +223,8 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Top text */}
           <div className="flex justify-between items-center mb-24 md:mb-32">
-            <h3 className="text-2xl md:text-[28px] font-medium tracking-tight text-black">By color</h3>
-            <h3 className="text-2xl md:text-[28px] font-medium tracking-tight text-black">and without AI.</h3>
+            <h3 className="text-2xl md:text-[28px] font-medium tracking-tight text-black">Natural light.</h3>
+            <h3 className="text-2xl md:text-[28px] font-medium tracking-tight text-black">True results.</h3>
           </div>
 
           {/* 3 Column Layout */}
@@ -233,7 +232,7 @@ export default function Home() {
             {/* Left Text */}
             <div className="flex lg:justify-end text-center lg:text-right">
               <h2 className="text-[56px] md:text-[80px] leading-[0.95] font-medium tracking-tight text-black">
-                Know what<br />you&apos;re<br />looking at.
+                Crafting<br />the perfect<br />frame.
               </h2>
             </div>
 
@@ -249,10 +248,10 @@ export default function Home() {
               {/* Overlay Pills */}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/5">
                 <div className="px-5 py-2.5 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white text-sm font-medium shadow-lg">
-                  The OOAA Arquitectura Studio. Designed by
+                  Street style in Myeongdong. Captured by
                 </div>
                 <div className="px-5 py-2.5 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white text-sm font-medium shadow-lg">
-                  Iker Ochotorena
+                  Shion Studio
                 </div>
               </div>
             </div>
@@ -260,7 +259,7 @@ export default function Home() {
             {/* Right Text */}
             <div className="flex lg:justify-start text-center lg:text-left">
               <p className="text-2xl md:text-[32px] leading-[1.1] font-medium text-gray-500 max-w-sm mx-auto lg:mx-0">
-                Cosmos researches<br />images—surfacing the<br />artist, source, and story.
+                Our studio specializes in high-end, aesthetic portraits that capture the real you in Seoul&apos;s iconic settings.
               </p>
             </div>
           </div>

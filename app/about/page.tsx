@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[#fcfcfc] text-black selection:bg-black selection:text-white pt-32 pb-24 px-6">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-5xl md:text-6xl font-medium tracking-tight mb-12">About Shion</h1>
+        <h1 className="text-5xl md:text-6xl font-medium tracking-tight mb-12">About SHION STUDIO</h1>
         
         <div className="relative w-full aspect-video mb-16 rounded-3xl overflow-hidden bg-black/5 shadow-lg">
           <Image 
@@ -18,22 +18,22 @@ export default function AboutPage() {
 
         <div className="space-y-8 text-xl text-gray-600 leading-relaxed">
           <p>
-            <strong className="text-black font-medium">Shion Photography</strong> was born out of a simple desire: to capture the fleeting, cinematic moments of life in one of the world&apos;s most dynamic cities. Seoul is a city of contrasts—where ancient palaces sit beside neon-lit skyscrapers, and tranquil mountain trails overlook bustling night markets.
+            <strong className="text-black font-medium">SHION STUDIO</strong> was founded to capture the fleeting, cinematic spirit of Seoul. Our city is a living canvas of contrasts—where imperial palaces meet neon-drenched skyscrapers, and quiet tradition thrives amidst hyper-modernity.
           </p>
           <p>
-            Founded by lead photographer Shion Park, our studio specializes in creating aesthetic, high-quality visual narratives for both locals and international visitors. We believe that a photo session shouldn&apos;t feel like a stiff, formal chore. Instead, it should be an experience—a guided exploration of the city where you can be your authentic self.
+            Led by founder Shion Park, our studio specializes in crafting aesthetic, high-end visual narratives specifically tailored for international travelers and those seeking a professional edge. We believe a photo session should be an unforgettable experience—a guided journey through Seoul where your authentic story is brought to life.
           </p>
           
           <h2 className="text-3xl font-medium text-black mt-16 mb-6 tracking-tight">Our Philosophy</h2>
           <p>
-            We focus on natural light, candid moments, and the unique geometry of Seoul&apos;s urban landscape. Whether we&apos;re shooting a quick solo portrait in Myeongdong or a full-day editorial experience across the Han River, our goal is to deliver images that feel timeless and deeply personal.
+            We focus on natural mastery of light, authentic candid moments, and the unique architecture of Seoul&apos;s urban landscape. Whether we&apos;re crafting a quick solo portrait in the heart of Myeongdong or a full-day cinematic editorial at the Han River, our mission is to deliver timeless images that resonate.
           </p>
           
           <h2 className="text-3xl font-medium text-black mt-16 mb-6 tracking-tight">The Experience</h2>
           <ul className="list-disc pl-6 space-y-4">
-            <li><strong className="text-black font-medium">Tailored Locations:</strong> We know the hidden alleys, the best sunset spots, and the most vibrant neon backdrops.</li>
-            <li><strong className="text-black font-medium">Effortless Direction:</strong> Not a professional model? No problem. We provide gentle, natural direction to help you look your best.</li>
-            <li><strong className="text-black font-medium">Premium Editing:</strong> Every photo is carefully color-graded to match our signature cinematic style.</li>
+            <li><strong className="text-black font-medium">Iconic & Hidden Locations:</strong> We guide you to the secret alleys, the most vibrant sunset peaks, and Seoul&apos;s most breathtaking backdrops.</li>
+            <li><strong className="text-black font-medium">Natural Direction:</strong> No modeling experience needed. We provide refined, gentle direction to ensure you feel comfortable and look stunning.</li>
+            <li><strong className="text-black font-medium">Premium Art Direction:</strong> Every image is meticulously color-graded and curated to reflect our signature, high-end aesthetic.</li>
           </ul>
         </div>
       </div>

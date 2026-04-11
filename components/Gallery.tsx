@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
-import { PLANS } from '@/lib/data';
+import { fetchPlans, type Plan } from '@/lib/data';
 import Link from 'next/link';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -15,17 +15,24 @@ const planImages = [
   { src: 'https://picsum.photos/seed/seoul3/1000/800', y: 100, speed: 1.5 },
   { src: 'https://picsum.photos/seed/seoul4/800/1200', y: 20, speed: 0.9 },
   { src: 'https://picsum.photos/seed/seoul5/1200/800', y: 80, speed: 1.1 },
+  { src: 'https://picsum.photos/seed/seoul6/800/1200', y: 40, speed: 1.3 },
 ];
 
 export default function Gallery() {
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [plans, setPlans] = useState<Plan[]>([]);
 
   useEffect(() => {
+    fetchPlans().then(setPlans).catch(() => setPlans([]));
+  }, []);
+
+  useEffect(() => {
+    if (plans.length === 0) return;
     const ctx = gsap.context(() => {
       imagesRef.current.forEach((img, i) => {
         if (!img) return;
-        
+
         gsap.to(img, {
           y: () => -100 * (planImages[i]?.speed || 1),
           ease: 'none',
@@ -40,7 +47,7 @@ export default function Gallery() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [plans]);
 
   return (
     <div ref={containerRef} className="relative w-full min-h-[150vh] bg-notion-bg overflow-hidden py-24" id="plans">
@@ -54,7 +61,7 @@ export default function Gallery() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
-          {PLANS.map((plan, i) => {
+          {plans.map((plan, i) => {
             const imgData = planImages[i] || planImages[0];
             return (
               <div
@@ -65,7 +72,7 @@ export default function Gallery() {
                 className="relative w-full group"
                 style={{ marginTop: `${imgData.y}px` }}
               >
-                <Link href={`/plan/${plan.id}`} className="block">
+                <Link href={`/plan/${plan.slug}`} className="block">
                   <div className="relative w-full aspect-[3/4] overflow-hidden rounded-2xl shadow-sm bg-notion-bg-hover mb-6">
                     <Image
                       src={imgData.src}

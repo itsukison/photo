@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { format, addDays, startOfDay } from 'date-fns';
 import { ChevronRight, ChevronLeft, Check, Calendar as CalendarIcon, MapPin, Users, CreditCard } from 'lucide-react';
 import Link from 'next/link';
-import { Plan, Location, Addon, PLANS, LOCATIONS, ADDONS, TIME_SLOTS } from '@/lib/data';
+import { Plan, Location, Addon, fetchPlans, fetchLocations, fetchAddons } from '@/lib/data';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/lib/AuthContext';
 
 type BookingState = {
   plan: Plan | null;
@@ -40,26 +42,79 @@ const INITIAL_STATE: BookingState = {
 };
 
 export default function BookPage() {
+  const { user, loading: authLoading, signIn, signUp } = useAuth();
   const [step, setStep] = useState(0);
   const [booking, setBooking] = useState<BookingState>(INITIAL_STATE);
   const [bookingRef, setBookingRef] = useState('');
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [addonList, setAddonList] = useState<Addon[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const planId = params.get('plan');
-    if (planId) {
-      const selectedPlan = PLANS.find(p => p.id === planId);
-      if (selectedPlan) {
-        setTimeout(() => {
-          setBooking(prev => ({ ...prev, plan: selectedPlan }));
-          setStep(1);
-        }, 0);
-      }
-    }
+    Promise.all([fetchPlans(), fetchLocations(), fetchAddons()])
+      .then(([p, l, a]) => { setPlans(p); setLocations(l); setAddonList(a); })
+      .catch(() => {});
   }, []);
 
-  const nextStep = () => setStep((s) => Math.min(s + 1, 8));
-  const prevStep = () => setStep((s) => Math.max(s - 1, 0));
+  useEffect(() => {
+    if (authLoading) return;
+    if (plans.length === 0) return;
+    const params = new URLSearchParams(window.location.search);
+    const planSlug = params.get('plan');
+    const selectedPlan = planSlug ? plans.find(p => p.slug === planSlug) ?? null : null;
+
+    setBooking(prev => ({
+      ...prev,
+      plan: selectedPlan ?? prev.plan,
+      clientInfo: {
+        ...prev.clientInfo,
+        name: user?.name ?? prev.clientInfo.name,
+        email: user?.email ?? prev.clientInfo.email,
+      },
+    }));
+
+    if (!user) {
+      setStep(0);
+    } else if (selectedPlan) {
+      setStep(2);
+    } else {
+      setStep(1);
+    }
+  }, [authLoading, user, plans]);
+
+  useEffect(() => {
+    if (!user || !booking.date || !booking.location || !booking.plan) {
+      setAvailableSlots([]);
+      return;
+    }
+    const totalMinutes = booking.plan.duration + booking.extraDuration;
+    const durationHours = Math.ceil(totalMinutes / 60);
+    const dateStr = format(booking.date, 'yyyy-MM-dd');
+    setSlotsLoading(true);
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc('get_available_slots', {
+        p_date: dateStr,
+        p_location_id: booking.location!.id,
+        p_plan_duration_hours: durationHours,
+      });
+      if (cancelled) return;
+      const slots = error ? [] : ((data as string[] | null) ?? []);
+      setAvailableSlots(slots);
+      if (booking.time && !slots.includes(booking.time)) {
+        setBooking((prev) => ({ ...prev, time: null }));
+      }
+      setSlotsLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [user, booking.date, booking.location, booking.plan, booking.extraDuration]);
+
+  const nextStep = () => setStep((s) => Math.min(s + 1, 9));
+  const prevStep = () => setStep((s) => Math.max(s - 1, user ? 1 : 0));
 
   const updateBooking = (updates: Partial<BookingState>) => {
     setBooking((prev) => ({ ...prev, ...updates }));
@@ -83,19 +138,185 @@ export default function BookPage() {
     return total;
   };
 
-  const handleConfirm = () => {
-    // Generate pseudo-random reference
-    const ref = `SPS-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    setBookingRef(ref);
+  const handleConfirm = async () => {
+    if (submitting) return;
+    if (!booking.plan || !booking.location || !booking.date || !booking.time) {
+      setSubmitError('Missing booking details.');
+      return;
+    }
+    setSubmitting(true);
+    setSubmitError(null);
+    const startHour = parseInt(booking.time.split(':')[0], 10);
+    const { data, error } = await supabase.rpc('create_booking', {
+      p_plan_id: booking.plan.id,
+      p_location_id: booking.location.id,
+      p_date: format(booking.date, 'yyyy-MM-dd'),
+      p_start_hour: startHour,
+      p_extra_duration_minutes: booking.extraDuration,
+      p_group_size: booking.groupSize,
+      p_retouch_notes: booking.retouchNotes,
+      p_addon_ids: booking.addons.map((a) => a.id),
+      p_client_name: booking.clientInfo.name,
+      p_client_email: booking.clientInfo.email || user?.email || '',
+      p_client_phone: booking.clientInfo.phone,
+      p_client_country: booking.clientInfo.country,
+      p_special_requests: booking.clientInfo.requests,
+      p_agreed_to_policy: booking.agreedToPolicy,
+    });
+    setSubmitting(false);
+    if (error) {
+      const msg = error.message || '';
+      if (msg.includes('NO_AVAILABILITY')) {
+        setSubmitError('Sorry — that slot was just taken. Please pick a different time.');
+      } else if (msg.includes('POLICY_NOT_AGREED')) {
+        setSubmitError('You must agree to the cancellation policy.');
+      } else if (msg.includes('NOT_AUTHENTICATED')) {
+        setSubmitError('Please sign in again to complete your booking.');
+      } else {
+        setSubmitError(msg || 'Failed to create booking.');
+      }
+      return;
+    }
+    const row = data as { reference?: string } | null;
+    setBookingRef(row?.reference ?? '');
     nextStep();
   };
 
   // --- Step Components ---
 
+  const Step0_Auth = () => {
+    const [mode, setMode] = useState<'signin' | 'signup'>('signup');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError(null);
+      setSubmitting(true);
+
+      if (mode === 'signup') {
+        if (!name.trim()) {
+          setError('Please enter your name.');
+          setSubmitting(false);
+          return;
+        }
+        if (password.length < 8) {
+          setError('Password must be at least 8 characters.');
+          setSubmitting(false);
+          return;
+        }
+        const { error: signUpError } = await signUp(email, password, name);
+        if (signUpError) {
+          const msg = signUpError.toLowerCase();
+          if (msg.includes('already') || msg.includes('registered') || msg.includes('exists')) {
+            setMode('signin');
+            setError('An account with that email already exists. Please sign in.');
+          } else {
+            setError(signUpError);
+          }
+          setSubmitting(false);
+          return;
+        }
+      } else {
+        const { error: signInError } = await signIn(email, password);
+        if (signInError) {
+          setError(signInError);
+          setSubmitting(false);
+          return;
+        }
+      }
+      setSubmitting(false);
+    };
+
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-3xl font-medium tracking-tight mb-2">Create Your Account</h2>
+          <p className="text-sm text-gray-500 font-medium">You need an account to manage your booking.</p>
+        </div>
+
+        <div className="flex gap-2 p-1 bg-black/5 rounded-full w-fit">
+          <button
+            type="button"
+            onClick={() => { setMode('signup'); setError(null); }}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${mode === 'signup' ? 'bg-black text-white' : 'text-gray-500 hover:text-black'}`}
+          >
+            Sign Up
+          </button>
+          <button
+            type="button"
+            onClick={() => { setMode('signin'); setError(null); }}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${mode === 'signin' ? 'bg-black text-white' : 'text-gray-500 hover:text-black'}`}
+          >
+            Log In
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {mode === 'signup' && (
+            <div>
+              <label className="block text-sm font-medium mb-2 text-black">Full Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
+              />
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium mb-2 text-black">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-black">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={mode === 'signup' ? 8 : undefined}
+              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+              className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
+              placeholder={mode === 'signup' ? 'Min 8 characters' : ''}
+            />
+          </div>
+
+          {error && (
+            <div className="p-4 border border-red-200 bg-red-50 text-red-700 rounded-2xl text-sm font-medium">
+              {error}
+            </div>
+          )}
+
+          <div className="mt-10 flex justify-end">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="px-8 py-3 bg-black text-white rounded-full font-medium disabled:opacity-50 transition-opacity hover:bg-black/80"
+            >
+              {submitting ? 'Please wait…' : mode === 'signup' ? 'Create Account' : 'Log In'}
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   const Step0_Plans = () => (
     <div className="space-y-4">
       <h2 className="text-3xl font-medium tracking-tight mb-8">Select a Plan</h2>
-      {PLANS.map((plan) => (
+      {plans.map((plan) => (
         <div
           key={plan.id}
           onClick={() => { updateBooking({ plan }); nextStep(); }}
@@ -123,7 +344,7 @@ export default function BookPage() {
     <div className="space-y-4">
       <h2 className="text-3xl font-medium tracking-tight mb-8">Choose Location</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {LOCATIONS.map((loc) => (
+        {locations.map((loc) => (
           <div
             key={loc.id}
             onClick={() => updateBooking({ location: loc })}
@@ -186,17 +407,23 @@ export default function BookPage() {
         {booking.date && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <h3 className="font-medium mb-4 text-black text-lg">Select Time</h3>
-            <div className="grid grid-cols-3 gap-3">
-              {TIME_SLOTS.map((t) => (
-                <div
-                  key={t}
-                  onClick={() => updateBooking({ time: t })}
-                  className={`p-4 border rounded-2xl cursor-pointer text-center transition-colors font-medium ${booking.time === t ? 'border-black bg-black/5 text-black' : 'border-black/10 hover:bg-black/5 bg-white text-gray-600'}`}
-                >
-                  {t}
-                </div>
-              ))}
-            </div>
+            {slotsLoading ? (
+              <p className="text-sm text-gray-500 font-medium">Checking availability…</p>
+            ) : availableSlots.length === 0 ? (
+              <p className="text-sm text-gray-500 font-medium">No photographers available for this date and location. Please pick another date.</p>
+            ) : (
+              <div className="grid grid-cols-3 gap-3">
+                {availableSlots.map((t) => (
+                  <div
+                    key={t}
+                    onClick={() => updateBooking({ time: t })}
+                    className={`p-4 border rounded-2xl cursor-pointer text-center transition-colors font-medium ${booking.time === t ? 'border-black bg-black/5 text-black' : 'border-black/10 hover:bg-black/5 bg-white text-gray-600'}`}
+                  >
+                    {t}
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -277,13 +504,13 @@ export default function BookPage() {
       }
     };
 
-    const hasRetouch = booking.addons.some(a => a.id === 'retouch');
+    const hasRetouch = booking.addons.some(a => a.slug === 'retouch');
 
     return (
       <div className="space-y-6">
         <h2 className="text-3xl font-medium tracking-tight mb-8">Enhance Your Session</h2>
         <div className="space-y-3">
-          {ADDONS.map(addon => {
+          {addonList.map(addon => {
             const isSelected = booking.addons.some(a => a.id === addon.id);
             return (
               <div
@@ -343,7 +570,7 @@ export default function BookPage() {
   };
 
   const Step5_ClientInfo = () => {
-    const isValid = booking.clientInfo.name && booking.clientInfo.email && booking.clientInfo.phone && booking.clientInfo.country;
+    const isValid = booking.clientInfo.name && booking.clientInfo.phone && booking.clientInfo.country;
     
     return (
       <div className="space-y-6">
@@ -355,16 +582,6 @@ export default function BookPage() {
               type="text"
               value={booking.clientInfo.name}
               onChange={(e) => updateBooking({ clientInfo: { ...booking.clientInfo, name: e.target.value } })}
-              className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-black">Email Address *</label>
-            <input
-              type="email"
-              value={booking.clientInfo.email}
-              onChange={(e) => updateBooking({ clientInfo: { ...booking.clientInfo, email: e.target.value } })}
               className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
               required
             />
@@ -519,11 +736,17 @@ export default function BookPage() {
       
       <div className="pt-8 border-t border-black/10">
         <p className="text-sm text-gray-500 mb-6 font-medium">Once you have completed the transfer:</p>
+        {submitError && (
+          <div className="mb-4 p-4 border border-red-200 bg-red-50 text-red-700 rounded-2xl text-sm font-medium">
+            {submitError}
+          </div>
+        )}
         <button
           onClick={handleConfirm}
-          className="w-full px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-black/80 transition-colors"
+          disabled={submitting}
+          className="w-full px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-black/80 transition-colors disabled:opacity-50"
         >
-          I&apos;ve completed my payment
+          {submitting ? 'Confirming…' : "I've completed my payment"}
         </button>
       </div>
     </div>
@@ -556,7 +779,7 @@ export default function BookPage() {
   );
 
   const steps = [
-    Step0_Plans, Step1_Location, Step2_DateTime, Step3_GroupSize, 
+    Step0_Auth, Step0_Plans, Step1_Location, Step2_DateTime, Step3_GroupSize,
     Step4_Addons, Step5_ClientInfo, Step6_Review, Step7_Payment, Step8_Confirmation
   ];
 
@@ -565,12 +788,12 @@ export default function BookPage() {
   return (
     <main className="min-h-screen bg-[#fcfcfc] pt-32 pb-24 text-black selection:bg-black selection:text-white">
       {/* Progress Bar */}
-      {step < 8 && (
+      {step < 9 && (
         <div className="w-full h-1 bg-black/5 fixed top-0 left-0 z-40">
-          <motion.div 
+          <motion.div
             className="h-full bg-black"
             initial={{ width: 0 }}
-            animate={{ width: `${((step + 1) / 8) * 100}%` }}
+            animate={{ width: `${((step + 1) / 9) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
         </div>
@@ -580,16 +803,16 @@ export default function BookPage() {
         {/* Header */}
         <div className="mb-12 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {step > 0 && step < 8 && (
+            {step > (user ? 1 : 0) && step < 9 && (
               <button onClick={prevStep} className="p-2 hover:bg-black/5 rounded-full transition-colors text-black">
                 <ChevronLeft size={20} />
               </button>
             )}
             <div className="font-medium text-gray-500">
-              {step < 8 ? `Step ${step + 1} of 8` : 'Confirmation'}
+              {step < 9 ? `Step ${step + 1} of 9` : 'Confirmation'}
             </div>
           </div>
-          {step < 8 && (
+          {step < 9 && (
             <Link href="/" className="text-gray-500 hover:text-black text-sm font-medium transition-colors">
               Cancel
             </Link>

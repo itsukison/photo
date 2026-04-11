@@ -50,7 +50,7 @@ export default function Preloader() {
               transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
               className="text-2xl md:text-3xl font-semibold tracking-tight"
             >
-              Shion Photography
+              SHION STUDIO
             </motion.div>
           </div>
           

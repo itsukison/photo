@@ -1,10 +1,11 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { PLANS } from '@/lib/data';
+import { fetchPlans, type Plan } from '@/lib/data';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Clock, MapPin, Camera } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const planImages: Record<string, string> = {
   'quick': 'https://picsum.photos/seed/seoul1/1200/800',
@@ -12,12 +13,29 @@ const planImages: Record<string, string> = {
   'golden': 'https://picsum.photos/seed/seoul3/1200/800',
   'neon': 'https://picsum.photos/seed/seoul4/1200/800',
   'full': 'https://picsum.photos/seed/seoul5/1200/800',
+  'vintage': 'https://picsum.photos/seed/seoul6/1200/800',
 };
 
 export default function PlanDetailPage() {
   const params = useParams();
-  const planId = params.id as string;
-  const plan = PLANS.find(p => p.id === planId);
+  const planSlug = params.id as string;
+  const [plan, setPlan] = useState<Plan | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlans()
+      .then((plans) => setPlan(plans.find((p) => p.slug === planSlug) ?? null))
+      .catch(() => setPlan(null))
+      .finally(() => setLoading(false));
+  }, [planSlug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#fcfcfc] pt-40 px-6 flex flex-col items-center text-center">
+        <p className="text-gray-500 font-medium">Loading…</p>
+      </div>
+    );
+  }
 
   if (!plan) {
     return (
@@ -30,7 +48,7 @@ export default function PlanDetailPage() {
     );
   }
 
-  const imageSrc = planImages[plan.id] || 'https://picsum.photos/seed/seoul1/1200/800';
+  const imageSrc = planImages[plan.slug] || 'https://picsum.photos/seed/seoul1/1200/800';
 
   return (
     <main className="min-h-screen bg-[#fcfcfc] text-black selection:bg-black selection:text-white pt-32 pb-24">
@@ -104,7 +122,7 @@ export default function PlanDetailPage() {
                 <div className="text-4xl font-medium tracking-tight">${plan.price}</div>
               </div>
               <Link
-                href={`/book?plan=${plan.id}`}
+                href={`/book?plan=${plan.slug}`}
                 className="h-14 px-8 rounded-full bg-black text-white flex items-center justify-center text-base font-medium hover:bg-black/80 transition-colors shadow-lg"
               >
                 Book this session

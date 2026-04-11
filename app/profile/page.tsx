@@ -31,7 +31,7 @@ const INITIAL_BOOKINGS = [
 ];
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -67,7 +67,7 @@ export default function ProfilePage() {
             <p className="text-gray-500 font-medium">{user.name} ({user.email})</p>
           </div>
           <button 
-            onClick={logout} 
+            onClick={signOut} 
             className="px-6 py-2.5 border border-black/10 rounded-full text-sm font-medium hover:bg-black/5 transition-colors"
           >
             Log Out
