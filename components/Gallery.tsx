@@ -12,8 +12,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const planImages = [
   { src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80', y: 24, speed: 0.8 },
-  { src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80', y: 0,  speed: 0.6 },
-  { src: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80', y: 48, speed: 1.0 },
+  { src: '/portrait.png', y: 0,  speed: 0.6 },
+  { src: '/fisheye1.jpeg', y: 48, speed: 1.0 },
 ];
 
 export default function Gallery() {

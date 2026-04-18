@@ -11,7 +11,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 const planImages: Record<string, string> = {
   quick: 'https://picsum.photos/seed/seoul1/1200/800',
-  fisheye: 'https://picsum.photos/seed/seoul2/1200/800',
+  portrait: '/portrait.png',
+  fisheye: '/fisheye1.jpeg',
   golden: 'https://picsum.photos/seed/seoul3/1200/800',
   neon: 'https://picsum.photos/seed/seoul4/1200/800',
   full: 'https://picsum.photos/seed/seoul5/1200/800',

@@ -77,8 +77,8 @@ function DesktopLanding() {
   const videoBottom = useTransform(scrollYProgress, [0, 0.5], ['-28vh', '8vh']);
   const videoBorderRadius = useTransform(scrollYProgress, [0, 0.5], ['24px', '32px']);
 
-  // Fade in the text quickly as the image reaches full size
-  const videoContentOpacity = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
+  // Fade in the text as image expands
+  const videoContentOpacity = useTransform(scrollYProgress, [0.02, 0.2], [0, 1]);
 
   return (
     <main className="min-h-screen bg-[#fcfcfc] text-notion-text selection:bg-notion-text selection:text-white">

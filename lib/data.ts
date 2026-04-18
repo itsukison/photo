@@ -23,33 +23,27 @@ export type Addon = {
 };
 
 export async function fetchPlans(): Promise<Plan[]> {
-  // Overriding dynamic fetch with curated "Swiss tech" plans for a premium aesthetic
-  return [
-    {
-      id: 'fb67bee2-0ee1-4b46-b77d-9734f62e964f',
-      slug: 'quick',
-      name: 'Light Flow',
-      price: 150,
-      duration: 30,
-      description: "A refined, high-efficiency session designed for the modern traveler. We'll navigate one of Seoul's most iconic districts together, capturing effortless, cinematic street-style portraits that reflect your personal aesthetic in just 30 minutes.",
-    },
-    {
-      id: '1bfb5ad4-a692-4fbc-afdd-c549520d6f92',
-      slug: 'portrait',
-      name: 'Urban Narrative',
-      price: 240,
-      duration: 60,
-      description: "A narrative-driven 60-minute exploration across two distinct Seoul backdrops. This plan offers a comprehensive visual story, perfect for professional portfolios or fashion-forward social presence, with enough time for subtle outfit shifts and deeper creative direction.",
-    },
-    {
-      id: 'a2f3d5ce-c583-44c0-a94c-480003f396f3',
-      slug: 'fisheye',
-      name: 'Cinematic Soul',
-      price: 450,
-      duration: 120,
-      description: "Our flagship experience. A two-hour deep dive into Seoul's visual heart, spanning three carefully curated locations. We'll utilize professional lighting and multi-look art direction to craft a bespoke cinematic gallery that rivals high-end editorial features.",
-    },
-  ];
+  const { data, error } = await supabase
+    .from('plans')
+    .select('id, slug, name, price, duration_minutes, description, sort_order')
+    .in('slug', ['quick', 'portrait', 'fisheye'])
+    .order('sort_order', { ascending: true });
+  if (error) throw error;
+
+  const enrichedDescriptions: Record<string, string> = {
+    quick: "A refined, high-efficiency session designed for the modern traveler. We'll navigate one of Seoul's most iconic districts together, capturing effortless, cinematic street-style portraits that reflect your personal aesthetic in just 30 minutes.",
+    portrait: "A narrative-driven 60-minute exploration across two distinct Seoul backdrops. This plan offers a comprehensive visual story, perfect for professional portfolios or fashion-forward social presence, with enough time for subtle outfit shifts and deeper creative direction.",
+    fisheye: "A creative 60-minute session using our signature fish-eye lens. We'll utilize specialized lighting and ultra-wide angles to craft a bespoke cinematic gallery that distorts space for a unique, editorial edge."
+  };
+
+  return (data ?? []).map((p) => ({
+    id: p.id as string,
+    slug: p.slug as string,
+    name: p.name as string,
+    price: p.price as number,
+    duration: p.duration_minutes as number,
+    description: enrichedDescriptions[p.slug as string] || ((p.description as string) ?? ''),
+  }));
 }
 
 export async function fetchLocations(): Promise<Location[]> {
