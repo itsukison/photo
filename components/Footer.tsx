@@ -18,6 +18,7 @@ const navRows = [
   ],
   [
     { label: 'Profile', href: '/profile' },
+    { label: 'Legal', href: '/commercial-law' },
   ],
 ];
 
@@ -36,6 +37,7 @@ export default function Footer() {
           <Link href="/#plans" className="mobile-touch-target justify-start">Plans</Link>
           <Link href="/about" className="mobile-touch-target justify-start">About</Link>
           <Link href="/book" className="mobile-touch-target justify-start">Book</Link>
+          <Link href="/commercial-law" className="mobile-touch-target justify-start">Legal</Link>
         </div>
 
         <div className="mt-8 flex flex-wrap gap-2">
@@ -100,12 +102,12 @@ export default function Footer() {
 
         <div className="border-t border-white/10 lg:flex-1">
           <div className="mx-auto max-w-[1600px] px-6 md:px-8 lg:flex lg:h-full lg:flex-col lg:px-10">
-            <section className="grid min-h-[380px] grid-cols-1 gap-10 py-12 md:grid-cols-[220px_1fr] md:py-14 lg:min-h-0 lg:flex-1 lg:py-10">
+            <section className="grid min-h-[280px] grid-cols-1 gap-10 py-12 md:grid-cols-[220px_1fr] md:py-14 lg:min-h-0 lg:flex-1 lg:py-10">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.08em] text-white/65">Navigation</p>
               </div>
 
-              <div className="font-serif text-[clamp(64px,8vw,152px)] leading-[0.9] tracking-[-0.02em]">
+              <div className="font-serif text-[clamp(48px,6vw,112px)] leading-[0.9] tracking-[-0.02em]">
                 {navRows.map((row) => (
                   <div key={row[0].label} className="flex flex-wrap items-end gap-x-4 md:gap-x-5">
                     {row.map((item, index) => (

@@ -28,17 +28,17 @@ const MOBILE_HERO_LAYERS: MobileHeroLayer[] = [
   {
     src: 'https://picsum.photos/seed/mobilehero1/900/1200',
     alt: 'Seoul portrait on stairs',
-    className: 'left-1 top-12 h-[47svh] w-[43vw] rotate-[-7deg]',
+    className: 'left-1 top-10 h-[33svh] w-[41vw] rotate-[-7deg]',
   },
   {
     src: 'https://picsum.photos/seed/mobilehero2/900/1200',
     alt: 'Neon evening portrait',
-    className: 'left-[28vw] top-7 h-[43svh] w-[42vw] rotate-[4deg]',
+    className: 'left-[29vw] top-4 h-[30svh] w-[40vw] rotate-[4deg]',
   },
   {
     src: 'https://picsum.photos/seed/mobilehero3/900/1200',
     alt: 'Editorial close-up shot',
-    className: 'right-1 top-14 h-[49svh] w-[38vw] rotate-[9deg]',
+    className: 'right-1 top-12 h-[35svh] w-[36vw] rotate-[9deg]',
   },
 ];
 
@@ -287,7 +287,7 @@ function MobileLanding() {
     <main className="min-h-screen bg-[#fcfcfc] text-notion-text selection:bg-notion-text selection:text-white md:hidden">
       <Preloader />
 
-      <section className="relative min-h-[100svh] overflow-hidden px-4 pb-10 pt-26">
+      <section className="relative min-h-[100svh] overflow-hidden flex flex-col justify-center px-4 pb-10 pt-[110px]">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[70svh] bg-[radial-gradient(circle_at_top,#d8d4ce_0%,rgba(252,252,252,0.15)_65%,transparent_95%)]" />
         <p className="relative z-10 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-black/45">Shion Studio · Seoul</p>
         <h1 className="relative z-10 mx-auto mt-4 max-w-[13ch] text-center text-[clamp(2.25rem,10vw,3.8rem)] font-medium leading-[0.95] tracking-tight text-black">
@@ -297,7 +297,7 @@ function MobileLanding() {
           Seoul sessions shaped like an editorial story, designed for travelers who want frames that feel timeless.
         </p>
 
-        <div className="relative mt-6 h-[54svh] min-h-[350px]">
+        <div className="relative mt-6 h-[40svh] min-h-[250px]">
           {MOBILE_HERO_LAYERS.map((layer) => (
             <motion.div
               key={layer.src}
