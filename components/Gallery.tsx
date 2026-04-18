@@ -11,8 +11,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 gsap.registerPlugin(ScrollTrigger);
 
 const planImages = [
-  { src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80', y: 24, speed: 0.8 },
-  { src: '/portrait.png', y: 0,  speed: 0.6 },
+  { src: '/portrait.png', y: 24, speed: 0.8 },
+  { src: '/portrait2.png', y: 0,  speed: 0.6 },
   { src: '/fisheye1.jpeg', y: 48, speed: 1.0 },
 ];
 
@@ -80,11 +80,10 @@ export default function Gallery() {
                       src={imgData.src}
                       alt={plan.name}
                       fill
-                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
+                      className="object-cover transition-transform duration-700 scale-100 group-hover:scale-105"
                       referrerPolicy="no-referrer"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
                   </div>
                   <div className="px-1">
                     <div className="flex justify-between items-baseline mb-2">

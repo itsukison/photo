@@ -10,8 +10,8 @@ import { motion } from 'motion/react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const planImages: Record<string, string> = {
-  quick: 'https://picsum.photos/seed/seoul1/1200/800',
-  portrait: '/portrait.png',
+  quick: '/portrait.png',
+  portrait: '/portrait2.png',
   fisheye: '/fisheye1.jpeg',
   golden: 'https://picsum.photos/seed/seoul3/1200/800',
   neon: 'https://picsum.photos/seed/seoul4/1200/800',

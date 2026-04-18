@@ -433,9 +433,11 @@ export default function BookPage() {
       return;
     }
 
-    const totalMinutes = booking.plan.duration + booking.extraDuration;
+    const { plan, location, date, time: initialTime } = booking;
+    const totalMinutes = plan.duration + booking.extraDuration;
     const durationHours = Math.ceil(totalMinutes / 60);
-    const dateStr = format(booking.date, 'yyyy-MM-dd');
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const locationId = location.id;
 
     setSlotsLoading(true);
     let cancelled = false;
@@ -443,7 +445,7 @@ export default function BookPage() {
     (async () => {
       const { data, error } = await supabase.rpc('get_available_slots', {
         p_date: dateStr,
-        p_location_id: booking.location.id,
+        p_location_id: locationId,
         p_plan_duration_hours: durationHours,
       });
 
@@ -452,7 +454,7 @@ export default function BookPage() {
       const slots = error ? [] : ((data as string[] | null) ?? []);
       setAvailableSlots(slots);
 
-      if (booking.time && !slots.includes(booking.time)) {
+      if (initialTime && !slots.includes(initialTime)) {
         setBooking((prev) => ({ ...prev, time: null }));
       }
 
@@ -570,7 +572,8 @@ export default function BookPage() {
     setSubmitting(true);
     setSubmitError(null);
 
-    const startHour = parseInt(booking.time.split(':')[0], 10);
+    const { plan, location, date, time } = booking;
+    const startHour = parseInt(time.split(':')[0], 10);
 
     // Forward the user's JWT so the SECURITY DEFINER RPC sees auth.uid().
     const { data: sessionData } = await supabase.auth.getSession();
@@ -590,9 +593,9 @@ export default function BookPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          planSlug: booking.plan.slug,
-          locationId: booking.location.id,
-          date: format(booking.date, 'yyyy-MM-dd'),
+          planSlug: plan.slug,
+          locationId: location.id,
+          date: format(date, 'yyyy-MM-dd'),
           startHour,
           extraDurationMinutes: booking.extraDuration,
           groupSize: booking.groupSize,
