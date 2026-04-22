@@ -12,7 +12,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const planImages: Record<string, string> = {
   quick: '/portrait.png',
   portrait: '/portrait2.png',
-  fisheye: '/fisheye1.jpeg',
+  fisheye: '/crossingsinglemain1.jpg',
   golden: 'https://picsum.photos/seed/tokyo3/1200/800',
   neon: 'https://picsum.photos/seed/tokyo4/1200/800',
   full: 'https://picsum.photos/seed/tokyo5/1200/800',
@@ -91,26 +91,73 @@ export default function PlanDetailPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-y-7 md:gap-y-10 gap-x-5 md:gap-x-6 border-t border-black/10 pt-6 md:pt-8 lg:pt-10 mt-auto"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-7 md:gap-y-10 gap-x-5 md:gap-x-6 border-t border-black/10 pt-6 md:pt-8 lg:pt-10 mt-auto"
           >
+            {/* DURATION */}
             <div>
-              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-3">Duration</div>
+              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-4">Duration</div>
               <div className="text-lg md:text-xl lg:text-2xl font-medium tracking-tight text-black">{plan.duration} Mins</div>
             </div>
+
+            {/* LOCATION */}
             <div>
-              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-3">Location</div>
-              <div className="text-lg md:text-xl lg:text-2xl font-medium tracking-tight text-black">Curated</div>
+              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-4">Location</div>
+              <div className="text-base md:text-lg font-medium tracking-tight text-black leading-snug">
+                Shibuya / Shinjuku / Akihabara <span className="text-notion-text-muted text-sm opacity-60">(Available)</span>
+              </div>
             </div>
+
+            {/* LENS */}
             <div>
-              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-3">Included</div>
-              <div className="text-lg md:text-xl lg:text-2xl font-medium tracking-tight text-black">Full Gallery</div>
+              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-4">Lens</div>
+              <div className="flex items-center gap-2 flex-wrap min-h-[32px]">
+                {plan.lens.split('+').map((part, idx, arr) => {
+                  const lensName = part.trim();
+                  const isPortrait = lensName.toLowerCase().includes('portrait');
+                  const isFishEye = lensName.toLowerCase().includes('fish eye');
+
+                  let style = 'bg-black/5 text-notion-text-muted border-transparent';
+                  if (isPortrait) {
+                    style = 'bg-[rgba(0,255,180,0.2)] text-[#008C64] border-[rgba(0,255,180,0.5)]';
+                  } else if (isFishEye) {
+                    style = 'bg-[rgba(255,0,128,0.2)] text-[#FF0080] border-[rgba(255,0,128,0.5)]';
+                  }
+
+                  const displayLabel = isPortrait ? 'Portrait' : isFishEye ? 'Fish Eye' : lensName;
+
+                  return (
+                    <div key={displayLabel} className="flex items-center gap-2">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.1em] border ${style}`}>
+                        {displayLabel}
+                      </span>
+                      {idx < arr.length - 1 && (
+                        <span className="text-[10px] font-bold text-notion-text-muted opacity-60">
+                          +
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="hidden lg:flex items-end justify-end mt-4 lg:mt-0 col-span-2 lg:col-span-1">
+
+            {/* DELIVERED */}
+            <div>
+              <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-4">Delivered</div>
+              <div className="flex items-center min-h-[32px]">
+                <span className="px-3 py-1 rounded-full bg-black/5 text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.1em] border border-transparent">
+                  {plan.photoCount}
+                </span>
+              </div>
+            </div>
+
+            {/* BOOK BUTTON */}
+            <div className="pt-4 lg:pt-8 col-span-1 md:col-span-2 lg:col-span-4">
               <Link
                 href={`/book?plan=${plan.slug}`}
-                className="w-full lg:w-auto px-8 h-12 lg:h-14 rounded-full bg-black text-white flex items-center justify-center text-[12px] font-bold uppercase tracking-[0.1em] hover:bg-black/80 transition-colors text-center whitespace-nowrap"
+                className="w-full lg:w-max px-10 h-14 rounded-full bg-black text-white flex items-center justify-center text-[12px] font-bold uppercase tracking-[0.1em] hover:bg-black/80 transition-all text-center whitespace-nowrap shadow-lg shadow-black/10 active:scale-[0.98]"
               >
-                Book — ${plan.price}
+                Book This Session — ${plan.price}
               </Link>
             </div>
           </motion.div>

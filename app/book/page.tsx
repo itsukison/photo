@@ -93,6 +93,7 @@ function parseLocation(value: unknown): Location | null {
     id: value.id,
     name: value.name,
     surcharge: value.surcharge,
+    isComingSoon: Boolean(value.isComingSoon),
   };
 }
 
@@ -773,15 +774,36 @@ export default function BookPage() {
         {locations.map((location) => (
           <div
             key={location.id}
-            onClick={() => updateBooking({ location, date: null, time: null, extraDuration: 0 })}
-            className={`p-5 border rounded-2xl cursor-pointer transition-colors ${booking.location?.id === location.id ? 'border-black bg-black/5' : 'border-black/10 hover:bg-black/5 bg-white'}`}
+            onClick={() => {
+              if (location.isComingSoon) return;
+              updateBooking({ location, date: null, time: null, extraDuration: 0 });
+            }}
+            className={`p-5 border rounded-2xl transition-all ${
+              location.isComingSoon
+                ? 'opacity-60 grayscale-[0.3] cursor-not-allowed bg-gray-50 border-black/5'
+                : booking.location?.id === location.id
+                  ? 'border-black bg-black/5 cursor-pointer'
+                  : 'border-black/10 hover:bg-black/5 bg-white cursor-pointer'
+            }`}
           >
-            <div className="flex justify-between items-center">
-              <span className="font-medium flex items-center gap-2 text-black">
-                <MapPin size={18} /> {location.name}
-              </span>
-              <span className="text-sm text-gray-500 font-medium">
-                {location.surcharge > 0 ? `+$${location.surcharge}` : 'Included'}
+            <div className="flex justify-between items-start">
+              <div className="flex flex-col gap-1">
+                <span className="font-bold flex items-center gap-2 text-black">
+                  <MapPin size={18} /> {location.name}
+                  {location.isComingSoon && (
+                    <span className="ml-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+                      Coming Soon
+                    </span>
+                  )}
+                </span>
+                {location.isComingSoon && (
+                  <span className="text-[10px] font-bold text-amber-600/80 uppercase tracking-tight">
+                    Summer Season
+                  </span>
+                )}
+              </div>
+              <span className={`text-sm font-bold ${location.isComingSoon ? 'text-gray-400' : 'text-gray-500'}`}>
+                {location.isComingSoon ? '—' : location.surcharge > 0 ? `+$${location.surcharge}` : 'Included'}
               </span>
             </div>
           </div>
