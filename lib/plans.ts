@@ -21,7 +21,7 @@ export const PLANS: Plan[] = [
     duration: 30,
     tagline: '30 minutes, one location',
     description:
-      'A fast, energetic 30-minute session capturing you at one iconic Seoul location.',
+      'A fast, energetic 30-minute session capturing you at one iconic Tokyo location.',
   },
   {
     slug: 'portrait',

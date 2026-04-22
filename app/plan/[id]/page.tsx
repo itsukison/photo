@@ -13,10 +13,10 @@ const planImages: Record<string, string> = {
   quick: '/portrait.png',
   portrait: '/portrait2.png',
   fisheye: '/fisheye1.jpeg',
-  golden: 'https://picsum.photos/seed/seoul3/1200/800',
-  neon: 'https://picsum.photos/seed/seoul4/1200/800',
-  full: 'https://picsum.photos/seed/seoul5/1200/800',
-  vintage: 'https://picsum.photos/seed/seoul6/1200/800',
+  golden: 'https://picsum.photos/seed/tokyo3/1200/800',
+  neon: 'https://picsum.photos/seed/tokyo4/1200/800',
+  full: 'https://picsum.photos/seed/tokyo5/1200/800',
+  vintage: 'https://picsum.photos/seed/tokyo6/1200/800',
 };
 
 export default function PlanDetailPage() {
@@ -52,7 +52,7 @@ export default function PlanDetailPage() {
     );
   }
 
-  const imageSrc = planImages[plan.slug] || 'https://picsum.photos/seed/seoul1/1200/800';
+  const imageSrc = planImages[plan.slug] || 'https://picsum.photos/seed/tokyo1/1200/800';
 
   return (
     <main className="bg-[#fcfcfc] text-notion-text selection:bg-notion-text selection:text-white pt-[84px] md:pt-[96px] pb-28 md:pb-0 font-sans">
@@ -148,7 +148,7 @@ export default function PlanDetailPage() {
                 <div className="text-[10px] font-bold text-notion-text-muted mb-2.5 md:mb-3 uppercase tracking-[0.2em]">Phase 01</div>
                 <h3 className="text-2xl md:text-3xl font-medium tracking-tight mb-3 text-black">Consultation</h3>
                 <p className="text-base md:text-lg text-notion-text-muted leading-[1.5] font-medium max-w-md">
-                  Pre-shoot discussion to understand your vision, style preferences, and select the perfect locations in Seoul tailored precisely to your aesthetic.
+                  Pre-shoot discussion to understand your vision, style preferences, and select the perfect locations in Tokyo tailored precisely to your aesthetic.
                 </p>
               </div>
 
@@ -196,7 +196,7 @@ export default function PlanDetailPage() {
             {/* Style Reference Image */}
             <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden group">
               <Image
-                src="https://picsum.photos/seed/seouleditorial/1200/900"
+                src="https://picsum.photos/seed/tokyoeditorial/1200/900"
                 alt="Editorial style reference"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"

@@ -26,8 +26,8 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-black text-white">
       <section className="md:hidden px-5 pt-12 pb-10 mobile-safe-px">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">Shion Studio</p>
-        <h2 className="mt-3 text-[clamp(2rem,10vw,3rem)] font-medium leading-[0.95] tracking-tight">Seoul, South Korea</h2>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">@ Studio ON</p>
+        <h2 className="mt-3 text-[clamp(2rem,10vw,3rem)] font-medium leading-[0.95] tracking-tight">Tokyo, Japan</h2>
         <p className="mt-5 max-w-[32ch] text-sm leading-relaxed text-white/65">
           Cinematic portrait sessions tailored for travelers, creatives, and founders who want timeless frames.
         </p>
@@ -66,9 +66,9 @@ export default function Footer() {
             <div className="space-y-8">
               <p className="text-xs font-semibold uppercase tracking-[0.08em] text-white/65">Location</p>
               <p className="text-[clamp(26px,2.2vw,44px)] leading-[1.15] tracking-tight">
-                Seoul
+                Tokyo
                 <br />
-                South Korea
+                Japan
               </p>
             </div>
 
@@ -131,10 +131,6 @@ export default function Footer() {
                   <span className="text-[#f0ad68]">↗</span>
                 </Link>
               </div>
-
-              <p className="text-[clamp(20px,1.55vw,34px)] leading-tight md:text-center">
-                Designed with love &amp; care by SHION STUDIO
-              </p>
             </section>
           </div>
         </div>

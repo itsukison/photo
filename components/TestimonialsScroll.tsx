@@ -9,7 +9,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const TESTIMONIALS = [
   {
     index: '01',
-    quote: "I've had professional headshots before but never like this. Shion found light in me I didn't know existed. The whole session felt completely effortless.",
+    quote: "I've had professional headshots before but never like this. @ Studio ON found light in me I didn't know existed. The whole session felt completely effortless.",
     name: 'Yoon Ji-seo',
     role: 'Brand Strategist',
     bgColor: 'bg-[#3d5e45]',
@@ -23,7 +23,7 @@ const TESTIMONIALS = [
   },
   {
     index: '03',
-    quote: "I've worked with photographers across Tokyo and Paris. The Seoul session was different — unhurried, precise, genuinely cinematic. Every location was perfect.",
+    quote: "I've worked with photographers across New York and Paris. The Tokyo session was different — unhurried, precise, genuinely cinematic. Every location was perfect.",
     name: 'Marcus Bell',
     role: 'Creative Director',
     bgColor: 'bg-[#c66014]',
@@ -120,7 +120,7 @@ export default function TestimonialsScroll() {
 
         <div className="mt-5 flex justify-between items-center">
           <span className="text-notion-text-muted text-[11px] font-semibold tracking-[0.18em] uppercase">Est. 2024</span>
-          <span className="text-notion-text-muted text-[11px] font-semibold tracking-[0.18em] uppercase">Seoul</span>
+          <span className="text-notion-text-muted text-[11px] font-semibold tracking-[0.18em] uppercase">Tokyo</span>
         </div>
       </section>
     );
@@ -205,7 +205,7 @@ export default function TestimonialsScroll() {
             Est. 2024
           </span>
           <span className="text-notion-text-muted text-xs font-medium tracking-widest uppercase">
-            Seoul
+            Tokyo
           </span>
         </div>
 

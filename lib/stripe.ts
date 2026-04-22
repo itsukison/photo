@@ -10,7 +10,7 @@ export const stripe = new Stripe(key, {
   apiVersion: '2026-03-25.dahlia',
   typescript: true,
   appInfo: {
-    name: 'Shion Studio',
+    name: 'Studio On',
   },
 });
 

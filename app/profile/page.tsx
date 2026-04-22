@@ -26,7 +26,7 @@ type Booking = {
 
 type Policy = {
   booking_id: string;
-  shoot_start_seoul: string;
+  shoot_start_tokyo: string;
   hours_until_shoot: number;
   cancel_refund_percent: number;
   cancel_refund_amount_cents: number;

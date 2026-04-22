@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
   ]);
 
   const baseName = `${planRow.name}`;
-  const baseDescription = `${locationRow?.name ?? 'Seoul'} · ${booking.date} at ${String(booking.start_hour).padStart(2, '0')}:00`;
+  const baseDescription = `${locationRow?.name ?? 'Tokyo'} · ${booking.date} at ${String(booking.start_hour).padStart(2, '0')}:00`;
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(req.url).origin;
 
@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
             currency: 'usd',
             unit_amount: booking.total_price * 100,
             product_data: {
-              name: `Shion Studio — ${baseName}`,
+              name: `@ Studio ON — ${baseName}`,
               description: baseDescription,
             },
           },

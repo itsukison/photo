@@ -27,7 +27,7 @@ interface MobileEditorialFrame {
 const MOBILE_HERO_LAYERS: MobileHeroLayer[] = [
   {
     src: 'https://picsum.photos/seed/mobilehero1/900/1200',
-    alt: 'Seoul portrait on stairs',
+    alt: 'Tokyo portrait on stairs',
     className: 'left-1 top-10 h-[33svh] w-[41vw] rotate-[-7deg]',
   },
   {
@@ -126,7 +126,7 @@ function DesktopLanding() {
                 <span className="text-4xl md:text-[56px] font-medium tracking-tight">Vision</span>
               </div>
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/90 text-sm font-medium">
-                Seoul &apos;24 Collection
+                Tokyo &apos;24 Collection
               </div>
             </motion.div>
           </motion.div>
@@ -134,63 +134,7 @@ function DesktopLanding() {
         </div>
       </div>
 
-      {/* Cosmos-style Showcase Section */}
-      <section className="px-6 max-w-7xl mx-auto h-[100svh] min-h-[600px] max-h-[1000px] flex flex-col justify-center pt-[96px] pb-12">
-        <h2 className="text-[clamp(32px,5vw,56px)] font-medium tracking-tight text-center mb-8 md:mb-12 text-notion-text">
-          Every shot tells your unique story.
-        </h2>
 
-        {/* Main Card */}
-        <div className="relative w-full flex-1 max-h-[60vh] rounded-[32px] bg-[#452c2e] overflow-hidden shadow-sm">
-
-          {/* Left Image */}
-          <div className="absolute left-[12%] top-[15%] bottom-[15%] w-[22%] rounded-sm overflow-hidden">
-            <Image
-              src="https://picsum.photos/seed/fashion1/600/800"
-              alt="Editorial"
-              fill
-              className="object-cover"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-
-          {/* Center Image */}
-          <div className="absolute left-[42%] top-[20%] bottom-[20%] w-[16%] rounded-sm overflow-hidden">
-            <Image
-              src="https://picsum.photos/seed/fashion2/400/600"
-              alt="Editorial"
-              fill
-              className="object-cover"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-
-          {/* Right Image */}
-          <div className="absolute right-0 top-0 bottom-0 w-[32%]">
-            <Image
-              src="https://picsum.photos/seed/fashion3/800/1200"
-              alt="Editorial"
-              fill
-              className="object-cover"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-
-          {/* Search Pill */}
-          <div className="absolute left-[38%] top-1/2 -translate-y-1/2 w-[300px] h-14 rounded-full bg-gradient-to-r from-[#3a2224]/80 to-[#2a1a1c]/80 backdrop-blur-md border border-white/10 flex items-center px-6 gap-3 text-white shadow-2xl z-10">
-            <Search size={18} className="text-white/80" />
-            <span className="text-base font-medium text-white/90">bukchon nights</span>
-          </div>
-        </div>
-
-        {/* Bottom Text */}
-        <div className="mt-8 md:mt-12 text-center">
-          <p className="text-xl md:text-[26px] text-notion-text-muted font-medium leading-snug tracking-tight">
-            Your style, your memories, your Seoul.<br />
-            Professionally captured, uniquely yours.
-          </p>
-        </div>
-      </section>
 
       {/* Feature Section: Know what you're looking at */}
       <section className="h-[100svh] min-h-[700px] max-h-[1000px] flex flex-col justify-center bg-[#fcfcfc] overflow-hidden pt-[96px] pb-12">
@@ -222,10 +166,10 @@ function DesktopLanding() {
               {/* Overlay Pills */}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/5">
                 <div className="px-5 py-2.5 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white text-sm font-medium shadow-lg">
-                  Street style in Myeongdong. Captured by
+                  Shibuya Crossing. Night. Captured by
                 </div>
                 <div className="px-5 py-2.5 rounded-full bg-white/30 backdrop-blur-md border border-white/40 text-white text-sm font-medium shadow-lg">
-                  Shion Studio
+                  @ Studio ON
                 </div>
               </div>
             </div>
@@ -233,7 +177,7 @@ function DesktopLanding() {
             {/* Right Text */}
             <div className="flex lg:justify-start text-center lg:text-left">
               <p className="text-xl md:text-[28px] leading-[1.2] font-medium text-notion-text-muted max-w-sm mx-auto lg:mx-0">
-                Our studio specializes in high-end, aesthetic portraits that capture the real you in Seoul&apos;s iconic settings.
+                Our studio specializes in cool, high-end that capture the real you in Tokyo’s iconic settings.
               </p>
             </div>
           </div>
@@ -289,12 +233,12 @@ function MobileLanding() {
 
       <section className="relative min-h-[100svh] overflow-hidden flex flex-col justify-center px-4 pb-10 pt-[110px]">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[70svh] bg-[radial-gradient(circle_at_top,#d8d4ce_0%,rgba(252,252,252,0.15)_65%,transparent_95%)]" />
-        <p className="relative z-10 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-black/45">Shion Studio · Seoul</p>
+        <p className="relative z-10 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-black/45">@ Studio ON · Tokyo</p>
         <h1 className="relative z-10 mx-auto mt-4 max-w-[13ch] text-center text-[clamp(2.25rem,10vw,3.8rem)] font-medium leading-[0.95] tracking-tight text-black">
-          Cinematic Seoul Moments
+          Cinematic Tokyo Moments
         </h1>
         <p className="relative z-10 mx-auto mt-5 max-w-[28ch] text-center text-sm leading-relaxed text-black/65">
-          Seoul sessions shaped like an editorial story, designed for travelers who want frames that feel timeless.
+          Tokyo sessions shaped like an editorial story, designed for travelers who want frames that feel timeless.
         </p>
 
         <div className="relative mt-6 h-[40svh] min-h-[250px]">
@@ -347,34 +291,13 @@ function MobileLanding() {
                 Watch reel
               </div>
               <h2 className="text-[clamp(1.9rem,8vw,2.8rem)] font-medium leading-[0.95] tracking-tight">Our Vision</h2>
-              <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/75">Seoul &apos;24 Collection</p>
+              <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/75">Tokyo &apos;24 Collection</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="px-4 pb-14">
-        <h2 className="text-center text-[clamp(1.8rem,8vw,2.8rem)] font-medium leading-[0.98] tracking-tight text-black">
-          Every shot tells your unique story.
-        </h2>
 
-        <div className="relative mt-8 h-[56svh] min-h-[420px] overflow-hidden rounded-[32px] bg-[#452c2e]">
-          {MOBILE_EDITORIAL_FRAMES.map((frame) => (
-            <div key={frame.src} className={`absolute overflow-hidden rounded-[18px] shadow-xl ${frame.className}`}>
-              <Image src={frame.src} alt={frame.alt} fill className="object-cover" referrerPolicy="no-referrer" sizes="40vw" />
-            </div>
-          ))}
-
-          <div className="absolute bottom-6 left-1/2 z-10 flex h-11 w-[82%] -translate-x-1/2 items-center gap-2 rounded-full border border-white/15 bg-gradient-to-r from-[#3a2224]/80 to-[#2a1a1c]/80 px-4 text-white shadow-2xl">
-            <Search size={16} className="text-white/80" />
-            <span className="text-sm font-medium text-white/90">bukchon nights</span>
-          </div>
-        </div>
-
-        <p className="mx-auto mt-8 max-w-[26ch] text-center text-lg font-medium leading-snug tracking-tight text-notion-text-muted">
-          Your style, your memories, your Seoul. Professionally captured, uniquely yours.
-        </p>
-      </section>
 
       <section className="px-4 pb-16">
         <div className="rounded-[30px] border border-black/10 bg-[linear-gradient(180deg,#f5f4f2_0%,#ffffff_58%)] p-5">
@@ -391,7 +314,7 @@ function MobileLanding() {
             <div className="relative mx-auto aspect-[3/4] w-[78vw] max-w-[320px] overflow-hidden rounded-[22px] shadow-lg">
               <Image
                 src="https://picsum.photos/seed/interior/800/1000"
-                alt="Seoul portrait lighting setup"
+                alt="Tokyo portrait lighting setup"
                 fill
                 className="object-cover"
                 referrerPolicy="no-referrer"
@@ -399,16 +322,16 @@ function MobileLanding() {
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/10 p-4 text-center">
                 <span className="rounded-full border border-white/50 bg-white/30 px-4 py-2 text-xs font-medium text-white backdrop-blur-md">
-                  Street style in Myeongdong
+                  Shibuya Crossing. Night
                 </span>
                 <span className="rounded-full border border-white/50 bg-white/30 px-4 py-2 text-xs font-medium text-white backdrop-blur-md">
-                  Captured by Shion Studio
+                  Captured by @ Studio ON
                 </span>
               </div>
             </div>
 
             <p className="text-lg font-medium leading-[1.25] tracking-tight text-notion-text-muted">
-              Our studio specializes in high-end, aesthetic portraits that capture the real you in Seoul&apos;s iconic settings.
+              Our studio specializes in cool, high-end that capture the real you in Tokyo’s iconic settings.
             </p>
           </div>
         </div>

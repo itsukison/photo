@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-// Seoul photography studio images — portrait/editorial style via picsum
+// Tokyo photography studio images — portrait/editorial style via picsum
 const PHOTOS = [
   {
     id: 1,
@@ -15,8 +15,8 @@ const PHOTOS = [
     y: "15px",
     zIndex: 50,
     direction: "left" as Direction,
-    src: "https://picsum.photos/seed/seoula/440/440",
-    alt: "Seoul portrait session",
+    src: "https://picsum.photos/seed/tokyoa/440/440",
+    alt: "Tokyo portrait session",
   },
   {
     id: 2,
@@ -25,8 +25,8 @@ const PHOTOS = [
     y: "32px",
     zIndex: 40,
     direction: "left" as Direction,
-    src: "https://picsum.photos/seed/seoulb/440/440",
-    alt: "Hongdae street photography",
+    src: "https://picsum.photos/seed/tokyob/440/440",
+    alt: "Shinjuku street photography",
   },
   {
     id: 3,
@@ -35,8 +35,8 @@ const PHOTOS = [
     y: "8px",
     zIndex: 30,
     direction: "right" as Direction,
-    src: "https://picsum.photos/seed/seoulc/440/440",
-    alt: "Gyeongbokgung portrait",
+    src: "https://picsum.photos/seed/tokyoc/440/440",
+    alt: "Asakusa portrait",
   },
   {
     id: 4,
@@ -45,8 +45,8 @@ const PHOTOS = [
     y: "22px",
     zIndex: 20,
     direction: "right" as Direction,
-    src: "https://picsum.photos/seed/seoule/440/440",
-    alt: "Neon nights Bukchon",
+    src: "https://picsum.photos/seed/tokyodistrict/440/440",
+    alt: "Neon nights Ginza",
   },
   {
     id: 5,
@@ -55,8 +55,8 @@ const PHOTOS = [
     y: "44px",
     zIndex: 10,
     direction: "left" as Direction,
-    src: "https://picsum.photos/seed/seoulf/440/440",
-    alt: "Myeongdong editorial",
+    src: "https://picsum.photos/seed/tokyoarchitecture/440/440",
+    alt: "Tokyo modern architecture",
   },
 ];
 
@@ -121,12 +121,12 @@ export const PhotoGallery = ({
 
       {/* Studio label */}
       <p className="my-2 text-center text-xs font-bold tracking-[0.2em] uppercase text-black/40">
-        Shion Studio · Seoul
+        @ Studio ON · Tokyo
       </p>
 
       {/* Hero title */}
       <h1 className="mx-auto max-w-2xl text-center text-[clamp(36px,6vw,68px)] leading-[1.05] font-medium tracking-tight text-black py-3">
-        Cinematic<br />Seoul Moments
+        Cinematic<br />Tokyo Moments
       </h1>
 
       {/* Photo fan */}

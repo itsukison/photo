@@ -59,7 +59,7 @@ export default function Gallery() {
             </h2>
           </div>
           <div className="hidden md:block text-notion-text-muted font-medium text-sm max-w-[240px] text-right leading-relaxed">
-            Curated experiences for those who seek cinematic frames in Seoul.
+            Curated experiences for those who seek cinematic frames in Tokyo.
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 relative">

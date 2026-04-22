@@ -12,8 +12,8 @@ export default function Navbar() {
       <div className="md:hidden pointer-events-auto rounded-full border border-black/10 bg-white/90 px-3 py-2 backdrop-blur-md shadow-[0_8px_26px_rgba(0,0,0,0.12)] mobile-safe-px">
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="inline-flex items-center gap-2.5 rounded-full px-1 py-1">
-            <img src="/logo.png" alt="Shion" className="w-8 h-8 object-contain" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-black/75">Shion</span>
+            <img src="/logo.png" alt="@ Studio ON" className="w-8 h-8 object-contain" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-black/75">@ Studio ON</span>
           </Link>
 
           {user ? (
@@ -40,7 +40,7 @@ export default function Navbar() {
         {/* Left Section */}
         <div className="flex items-center gap-4 pointer-events-auto">
           <Link href="/" className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-black/5 hover:scale-105 transition-transform">
-            <img src="/logo.png" alt="Shion" className="w-9 h-9 object-contain" />
+            <img src="/logo.png" alt="@ Studio ON" className="w-9 h-9 object-contain" />
           </Link>
           <div className="h-12 bg-white rounded-full flex items-center px-2 shadow-sm border border-black/5">
             <Link href="#explore" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">

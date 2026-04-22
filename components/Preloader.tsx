@@ -72,7 +72,7 @@ export default function Preloader() {
               transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : 0.1, ease: 'easeOut' }}
               className="text-xl md:text-3xl font-semibold tracking-tight"
             >
-              SHION STUDIO
+              @ STUDIO ON
             </motion.div>
           </div>
 

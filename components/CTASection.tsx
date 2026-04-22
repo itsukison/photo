@@ -55,7 +55,7 @@ export default function CTASection() {
 
         <div className="relative z-10 flex flex-col items-center gap-8 text-center select-none">
           <p className="text-white/40 text-[11px] tracking-[0.24em] uppercase font-semibold">
-            Seoul · Est. 2024
+            Tokyo · Est. 2024
           </p>
 
           <h2 className="text-[clamp(2.4rem,11vw,4rem)] font-medium leading-[0.95] tracking-tight text-white">
@@ -78,7 +78,7 @@ export default function CTASection() {
         </div>
 
         <div className="absolute bottom-7 left-0 right-0 z-10 flex justify-between px-8 pointer-events-none text-white/20 text-[11px] tracking-widest uppercase">
-          <span>Shion Studio</span>
+          <span>@ Studio ON</span>
           <span>Photography</span>
         </div>
       </section>
@@ -106,7 +106,7 @@ export default function CTASection() {
       <div className="relative z-10 flex flex-col items-center gap-10 px-6 text-center select-none">
         {/* Eyebrow */}
         <p className="text-white/40 text-xs tracking-[0.25em] uppercase font-medium">
-          Seoul · Est. 2024
+          Tokyo · Est. 2024
         </p>
 
         {/* Headline — capped at 80px to match site's largest display text */}
@@ -134,7 +134,7 @@ export default function CTASection() {
 
       {/* Swiss grid bottom anchors */}
       <div className="absolute bottom-8 left-0 right-0 z-10 flex justify-between px-8 pointer-events-none">
-        <span className="text-white/20 text-xs tracking-widest uppercase">Shion Studio</span>
+        <span className="text-white/20 text-xs tracking-widest uppercase">@ Studio ON</span>
         <span className="text-white/20 text-xs tracking-widest uppercase">Photography</span>
       </div>
     </section>

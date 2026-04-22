@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'SHION STUDIO | Professional K-Photography in Seoul',
-  description: 'Capture your journey with premium, cinematic photo shoots in Seoul. Tailored for travelers who want to preserve their Korean memories with professional aesthetic results.',
+  title: '@ STUDIO ON | Professional Photography in Tokyo',
+  description: 'Capture your journey with premium, cinematic photo shoots in Tokyo. Tailored for travelers who want to preserve their Tokyo memories with professional aesthetic results.',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
