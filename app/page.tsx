@@ -26,19 +26,19 @@ interface MobileEditorialFrame {
 
 const MOBILE_HERO_LAYERS: MobileHeroLayer[] = [
   {
-    src: 'https://picsum.photos/seed/mobilehero1/900/1200',
-    alt: 'Tokyo portrait on stairs',
-    className: 'left-1 top-10 h-[33svh] w-[41vw] rotate-[-7deg]',
+    src: '/crossingjeans1.JPG',
+    alt: 'Tokyo portrait session',
+    className: 'left-1 top-10 w-[42vw] aspect-[3/4] rotate-[-7deg]',
   },
   {
-    src: 'https://picsum.photos/seed/mobilehero2/900/1200',
+    src: '/redneonfriendship1.jpg',
     alt: 'Neon evening portrait',
-    className: 'left-[29vw] top-4 h-[30svh] w-[40vw] rotate-[4deg]',
+    className: 'left-[28vw] top-4 w-[42vw] aspect-[3/4] rotate-[4deg]',
   },
   {
-    src: 'https://picsum.photos/seed/mobilehero3/900/1200',
-    alt: 'Editorial close-up shot',
-    className: 'right-1 top-12 h-[35svh] w-[36vw] rotate-[9deg]',
+    src: '/telephonecouple1.JPG',
+    alt: 'Editorial shot',
+    className: 'right-1 top-12 w-[38vw] aspect-[3/4] rotate-[9deg]',
   },
 ];
 
@@ -157,7 +157,7 @@ function DesktopLanding() {
             {/* Center Image */}
             <div className="relative w-full max-w-[320px] lg:max-w-md mx-auto aspect-[3/4] rounded-[24px] overflow-hidden shadow-lg">
               <Image
-                src="https://picsum.photos/seed/interior/800/1000"
+                src="/crossingpinkhair1.jpg"
                 alt="Interior Design"
                 fill
                 className="object-cover"
@@ -313,7 +313,7 @@ function MobileLanding() {
 
             <div className="relative mx-auto aspect-[3/4] w-[78vw] max-w-[320px] overflow-hidden rounded-[22px] shadow-lg">
               <Image
-                src="https://picsum.photos/seed/interior/800/1000"
+                src="/crossingpinkhair1.jpg"
                 alt="Tokyo portrait lighting setup"
                 fill
                 className="object-cover"

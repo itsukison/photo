@@ -121,7 +121,7 @@ async function handleCheckoutExpired(session: Stripe.Checkout.Session) {
     // Clear the pending reschedule; the booking stays on its original slot.
     await supabase.from('bookings').update({
       pending_reschedule_date: null,
-      pending_reschedule_start_hour: null,
+      pending_reschedule_start_minutes: null,
       reschedule_session_id: null,
     }).eq('reschedule_session_id', session.id);
     return;

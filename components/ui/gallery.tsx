@@ -15,7 +15,7 @@ const PHOTOS = [
     y: "15px",
     zIndex: 50,
     direction: "left" as Direction,
-    src: "https://picsum.photos/seed/tokyoa/440/440",
+    src: "/crossingcouple2.JPG",
     alt: "Tokyo portrait session",
   },
   {
@@ -25,7 +25,7 @@ const PHOTOS = [
     y: "32px",
     zIndex: 40,
     direction: "left" as Direction,
-    src: "https://picsum.photos/seed/tokyob/440/440",
+    src: "/crossingpinkhair2.jpg",
     alt: "Shinjuku street photography",
   },
   {
@@ -35,7 +35,7 @@ const PHOTOS = [
     y: "8px",
     zIndex: 30,
     direction: "right" as Direction,
-    src: "https://picsum.photos/seed/tokyoc/440/440",
+    src: "/neonvandingportrait2.jpg",
     alt: "Asakusa portrait",
   },
   {
@@ -45,7 +45,7 @@ const PHOTOS = [
     y: "22px",
     zIndex: 20,
     direction: "right" as Direction,
-    src: "https://picsum.photos/seed/tokyodistrict/440/440",
+    src: "/crossingsinglemain4.jpg",
     alt: "Neon nights Ginza",
   },
   {
@@ -55,18 +55,8 @@ const PHOTOS = [
     y: "44px",
     zIndex: 10,
     direction: "left" as Direction,
-    src: "https://picsum.photos/seed/tokyoarchitecture/440/440",
+    src: "/vandingfriendship3.jpg",
     alt: "Tokyo modern architecture",
-  },
-  {
-    id: 6,
-    order: 5,
-    x: "480px",
-    y: "62px",
-    zIndex: 5,
-    direction: "right" as Direction,
-    src: "/redneonfriendship2.jpg",
-    alt: "Red neon friendship portrait",
   },
 ];
 

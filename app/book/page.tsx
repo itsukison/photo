@@ -436,7 +436,6 @@ export default function BookPage() {
 
     const { plan, location, date, time: initialTime } = booking;
     const totalMinutes = plan.duration + booking.extraDuration;
-    const durationHours = Math.ceil(totalMinutes / 60);
     const dateStr = format(date, 'yyyy-MM-dd');
     const locationId = location.id;
 
@@ -447,7 +446,7 @@ export default function BookPage() {
       const { data, error } = await supabase.rpc('get_available_slots', {
         p_date: dateStr,
         p_location_id: locationId,
-        p_plan_duration_hours: durationHours,
+        p_plan_duration_minutes: totalMinutes,
       });
 
       if (cancelled) return;
@@ -574,7 +573,8 @@ export default function BookPage() {
     setSubmitError(null);
 
     const { plan, location, date, time } = booking;
-    const startHour = parseInt(time.split(':')[0], 10);
+    const [tH, tM] = time.split(':').map(Number);
+    const startMinutes = tH * 60 + tM;
 
     // Forward the user's JWT so the SECURITY DEFINER RPC sees auth.uid().
     const { data: sessionData } = await supabase.auth.getSession();
@@ -597,7 +597,7 @@ export default function BookPage() {
           planSlug: plan.slug,
           locationId: location.id,
           date: format(date, 'yyyy-MM-dd'),
-          startHour,
+          startMinutes,
           extraDurationMinutes: booking.extraDuration,
           groupSize: booking.groupSize,
           retouchNotes: booking.retouchNotes,

@@ -14,7 +14,7 @@ export const runtime = 'nodejs';
 
 type Body = {
   newDate: string;
-  newStartHour: number;
+  newStartMinutes: number;
 };
 
 export async function POST(
@@ -42,7 +42,7 @@ export async function POST(
     const { data, error } = await supabase.rpc('apply_free_reschedule', {
       p_booking_id: id,
       p_new_date: body.newDate,
-      p_new_start_hour: body.newStartHour,
+      p_new_start_minutes: body.newStartMinutes,
     });
     if (error) {
       const msg = error.message;
@@ -80,7 +80,7 @@ export async function POST(
               unit_amount: feeCents,
               product_data: {
                 name: `Rescheduling Fee — ${bookingRow.reference}`,
-                description: `New date: ${body.newDate} at ${String(body.newStartHour).padStart(2, '0')}:00`,
+                description: `New date: ${body.newDate} at ${String(Math.floor(body.newStartMinutes / 60)).padStart(2, '0')}:${String(body.newStartMinutes % 60).padStart(2, '0')}`,
               },
             },
           },
@@ -112,7 +112,7 @@ export async function POST(
     const { error: stashErr } = await supabase.rpc('stash_pending_reschedule', {
       p_booking_id: id,
       p_new_date: body.newDate,
-      p_new_start_hour: body.newStartHour,
+      p_new_start_minutes: body.newStartMinutes,
       p_session_id: session.id,
     });
     if (stashErr) {

@@ -45,12 +45,15 @@ function formatStatus(raw: string): string {
     case 'confirmed': return 'Confirmed';
     case 'completed': return 'Completed';
     case 'cancelled': return 'Cancelled';
+    case 'pending_reschedule_confirmation': return 'Reschedule Pending';
     default: return raw;
   }
 }
 
-function formatHour(hour: number): string {
-  return `${String(hour).padStart(2, '0')}:00`;
+function formatMinutes(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
 async function authedFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
@@ -83,7 +86,7 @@ export default function ProfilePage() {
     const { data, error } = await supabase
       .from('bookings')
       .select(`
-        id, reference, date, start_hour, status, payment_status, total_price,
+        id, reference, date, start_minutes, status, payment_status, total_price,
         refund_amount_cents, group_size,
         plans(name), locations(name), booking_addons(addons(name))
       `)
@@ -103,7 +106,7 @@ export default function ProfilePage() {
         reference: b.reference as string,
         plan: plan?.name ?? '—',
         date: b.date as string,
-        startHour: b.start_hour as number,
+        startHour: b.start_minutes as number,
         location: location?.name ?? '—',
         rawStatus: b.status as string,
         status: formatStatus(b.status as string),
@@ -218,11 +221,12 @@ export default function ProfilePage() {
     setRescheduleBusyId(bookingId);
     setActionError(null);
     try {
+      const [rH, rM] = time.split(':').map(Number);
       const res = await authedFetch(`/api/bookings/${bookingId}/reschedule`, {
         method: 'POST',
         body: JSON.stringify({
           newDate: format(rescheduleDate, 'yyyy-MM-dd'),
-          newStartHour: parseInt(time.split(':')[0], 10),
+          newStartMinutes: rH * 60 + rM,
         }),
       });
       if (!res.ok) {
@@ -318,7 +322,9 @@ export default function ProfilePage() {
                                 ? 'bg-red-50 text-red-700 border-red-200'
                                 : booking.rawStatus === 'pending_confirmation'
                                   ? 'bg-amber-50 text-amber-700 border-amber-200'
-                                  : booking.rawStatus === 'pending_payment'
+                                  : booking.rawStatus === 'pending_reschedule_confirmation'
+                                    ? 'bg-violet-50 text-violet-700 border-violet-200'
+                                    : booking.rawStatus === 'pending_payment'
                                     ? 'bg-gray-100 text-gray-600 border-gray-200'
                                     : 'bg-gray-50 text-gray-700 border-gray-200'
                           }`}
@@ -337,7 +343,7 @@ export default function ProfilePage() {
                         )}
                       </div>
                       <div className={`grid grid-cols-1 sm:flex sm:flex-wrap items-start sm:items-center gap-2 sm:gap-5 text-[13px] md:text-sm font-medium ${isCancelled ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <span className="flex items-center gap-1.5 min-w-0"><Calendar size={15} /> {booking.date} at {formatHour(booking.startHour)}</span>
+                        <span className="flex items-center gap-1.5 min-w-0"><Calendar size={15} /> {booking.date} at {formatMinutes(booking.startHour)}</span>
                         <span className="flex items-center gap-1.5 min-w-0"><MapPin size={15} /> {booking.location}</span>
                       </div>
                     </div>

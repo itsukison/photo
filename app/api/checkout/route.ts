@@ -19,7 +19,7 @@ type CheckoutBody = {
   planSlug: string;
   locationId: string;
   date: string; // yyyy-MM-dd
-  startHour: number;
+  startMinutes: number;
   extraDurationMinutes: number;
   groupSize: number;
   addonIds: string[];
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     p_plan_id: planRow.id,
     p_location_id: body.locationId,
     p_date: body.date,
-    p_start_hour: body.startHour,
+    p_start_minutes: body.startMinutes,
     p_extra_duration_minutes: body.extraDurationMinutes ?? 0,
     p_group_size: body.groupSize,
     p_retouch_notes: body.retouchNotes ?? '',
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
     reference: string;
     total_price: number;
     date: string;
-    start_hour: number;
+    start_minutes: number;
   } | null;
   if (!booking) return errorResponse('Booking not returned', 500);
 
@@ -105,7 +105,9 @@ export async function POST(req: NextRequest) {
   ]);
 
   const baseName = `${planRow.name}`;
-  const baseDescription = `${locationRow?.name ?? 'Tokyo'} · ${booking.date} at ${String(booking.start_hour).padStart(2, '0')}:00`;
+  const bH = Math.floor(booking.start_minutes / 60);
+  const bM = booking.start_minutes % 60;
+  const baseDescription = `${locationRow?.name ?? 'Seoul'} · ${booking.date} at ${String(bH).padStart(2, '0')}:${String(bM).padStart(2, '0')}`;
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(req.url).origin;
 

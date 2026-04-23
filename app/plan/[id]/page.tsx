@@ -18,7 +18,7 @@ const planImages: Record<string, string> = {
 };
 
 const secondaryImages: Record<string, string[]> = {
-  quick: ['/portrait.png', '/portrait2.png'],
+  quick: ['/neonvandingportrait1.jpg', '/neonvandingportrait3.jpg'],
   portrait: ['/redneonportrait1.jpg', '/redneonportrait2.jpg'],
   fisheye: ['/crossingfriendship1.jpg', '/crossingfriendship3.jpg'],
   signature: ['/crossingsinglemain2.JPG', '/crossingsinglemain3.jpg'],
