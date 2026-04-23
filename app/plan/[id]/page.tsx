@@ -10,13 +10,19 @@ import { motion } from 'motion/react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const planImages: Record<string, string> = {
-  quick: '/portrait.png',
-  portrait: '/portrait2.png',
-  fisheye: '/crossingsinglemain1.jpg',
-  golden: 'https://picsum.photos/seed/tokyo3/1200/800',
-  neon: 'https://picsum.photos/seed/tokyo4/1200/800',
-  full: 'https://picsum.photos/seed/tokyo5/1200/800',
-  vintage: 'https://picsum.photos/seed/tokyo6/1200/800',
+  quick: '/mainportrait.jpg',
+  portrait: '/redneonportrait3.jpg',
+  fisheye: '/crossingfriendship2.jpg',
+  signature: '/crossingsinglemain1.jpg',
+  couple: '/telephonecouple1.JPG',
+};
+
+const secondaryImages: Record<string, string[]> = {
+  quick: ['/portrait.png', '/portrait2.png'],
+  portrait: ['/redneonportrait1.jpg', '/redneonportrait2.jpg'],
+  fisheye: ['/crossingfriendship1.jpg', '/crossingfriendship3.jpg'],
+  signature: ['/crossingsinglemain2.JPG', '/crossingsinglemain3.jpg'],
+  couple: ['/telephonejeans.JPG', '/crossingcouple1.JPG'],
 };
 
 export default function PlanDetailPage() {
@@ -53,26 +59,27 @@ export default function PlanDetailPage() {
   }
 
   const imageSrc = planImages[plan.slug] || 'https://picsum.photos/seed/tokyo1/1200/800';
+  const secondaryGallery = secondaryImages[plan.slug] || [];
 
   return (
     <main className="bg-[#fcfcfc] text-notion-text selection:bg-notion-text selection:text-white pt-[84px] md:pt-[96px] pb-28 md:pb-0 font-sans">
       {/* Hero Section */}
       <section className="min-h-[calc(100svh-84px)] md:min-h-[calc(100svh-96px)] lg:h-[calc(100svh-96px)] flex flex-col lg:flex-row px-4 md:px-12 pb-8 lg:pb-12 pt-4 lg:pt-8 gap-8 md:gap-12 lg:gap-16 max-w-[2000px] mx-auto">
         {/* Left: Typography & Grid */}
-        <div className="order-2 lg:order-1 flex-1 flex flex-col justify-between pt-2 lg:pt-8 lg:pb-8">
+        <div className="order-2 lg:order-1 flex-1 flex flex-col justify-between pt-2 lg:pt-4 lg:pb-4">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-            <Link href="/#plans" className="inline-flex items-center gap-2 text-[11px] font-bold text-notion-text opacity-70 hover:opacity-100 transition-opacity uppercase tracking-[0.2em] mb-8 md:mb-12 lg:mb-20">
+            <Link href="/#plans" className="inline-flex items-center gap-2 text-[11px] font-bold text-notion-text opacity-70 hover:opacity-100 transition-opacity uppercase tracking-[0.2em] mb-6 md:mb-8 lg:mb-8">
               <ArrowRight className="rotate-180" size={14} />
               Back
             </Link>
           </motion.div>
 
-          <div className="mb-10 lg:mb-0">
+          <div className="mb-8 lg:mb-4">
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[44px] sm:text-[56px] md:text-[80px] lg:text-[7vw] xl:text-[100px] leading-[0.92] tracking-tighter font-medium text-black uppercase lg:-ml-1 mb-5 md:mb-6 lg:mb-8"
+              className="text-[44px] sm:text-[56px] md:text-[80px] lg:text-[5.5vw] xl:text-[80px] leading-[0.92] tracking-tighter font-medium text-black uppercase lg:-ml-1 mb-4 md:mb-5 lg:mb-6"
             >
               {plan.name}
             </motion.h1>
@@ -91,7 +98,7 @@ export default function PlanDetailPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-7 md:gap-y-10 gap-x-5 md:gap-x-6 border-t border-black/10 pt-6 md:pt-8 lg:pt-10 mt-auto"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 md:gap-y-8 gap-x-5 md:gap-x-6 border-t border-black/10 pt-5 md:pt-6 lg:pt-6 mt-auto"
           >
             {/* DURATION */}
             <div>
@@ -116,12 +123,7 @@ export default function PlanDetailPage() {
                   const isPortrait = lensName.toLowerCase().includes('portrait');
                   const isFishEye = lensName.toLowerCase().includes('fish eye');
 
-                  let style = 'bg-black/5 text-notion-text-muted border-transparent';
-                  if (isPortrait) {
-                    style = 'bg-[rgba(0,255,180,0.2)] text-[#008C64] border-[rgba(0,255,180,0.5)]';
-                  } else if (isFishEye) {
-                    style = 'bg-[rgba(255,0,128,0.2)] text-[#FF0080] border-[rgba(255,0,128,0.5)]';
-                  }
+                  const style = 'bg-black/5 text-notion-text-muted border-transparent';
 
                   const displayLabel = isPortrait ? 'Portrait' : isFishEye ? 'Fish Eye' : lensName;
 
@@ -152,7 +154,7 @@ export default function PlanDetailPage() {
             </div>
 
             {/* BOOK BUTTON */}
-            <div className="pt-4 lg:pt-8 col-span-1 md:col-span-2 lg:col-span-4">
+            <div className="pt-3 lg:pt-4 col-span-1 md:col-span-2 lg:col-span-4">
               <Link
                 href={`/book?plan=${plan.slug}`}
                 className="w-full lg:w-max px-10 h-14 rounded-full bg-black text-white flex items-center justify-center text-[12px] font-bold uppercase tracking-[0.1em] hover:bg-black/80 transition-all text-center whitespace-nowrap shadow-lg shadow-black/10 active:scale-[0.98]"
@@ -241,21 +243,38 @@ export default function PlanDetailPage() {
             </ul>
 
             {/* Style Reference Image */}
-            <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden group">
-              <Image
-                src="https://picsum.photos/seed/tokyoeditorial/1200/900"
-                alt="Editorial style reference"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
-              <div className="absolute bottom-6 left-6">
-                <span className="px-5 py-2.5 rounded-full bg-white/90 backdrop-blur-md text-black text-[11px] font-bold uppercase tracking-[0.15em] shadow-lg">
-                  Style Reference
-                </span>
+            {secondaryGallery.length > 0 ? (
+              <div className="grid grid-cols-2 gap-4 mt-8">
+                {secondaryGallery.map((src, idx) => (
+                  <div key={idx} className={`relative w-full ${idx === 0 ? 'aspect-[4/5]' : 'aspect-square mt-8'} rounded-[24px] overflow-hidden group`}>
+                    <Image
+                      src={src}
+                      alt="Style reference"
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden group">
+                <Image
+                  src="https://picsum.photos/seed/tokyoeditorial/1200/900"
+                  alt="Editorial style reference"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
+                <div className="absolute bottom-6 left-6">
+                  <span className="px-5 py-2.5 rounded-full bg-white/90 backdrop-blur-md text-black text-[11px] font-bold uppercase tracking-[0.15em] shadow-lg">
+                    Style Reference
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

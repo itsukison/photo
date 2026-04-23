@@ -9,12 +9,16 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import Image from 'next/image';
 
 const images = [
-  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=300&q=80',
-  'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=300&q=80',
-  'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=300&q=80',
-  'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=300&q=80',
-  'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=300&q=80',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+  '/crossingfriendship4.jpg',
+  '/crossingpinkhair2.jpg',
+  '/crossingsingle2.jpg',
+  '/neonvandingportrait1.jpg',
+  '/redneonfriendship1.jpg',
+  '/vandingfriendship2.jpg',
+  '/crossingcouple3.JPG',
+  '/crossingjeans2.JPG',
+  '/redneonportrait2.jpg',
+  '/telephonejeans.JPG',
 ];
 
 export default function CTASection() {
@@ -25,7 +29,7 @@ export default function CTASection() {
   if (isMobile) {
     return (
       <section className="relative w-full min-h-[92svh] bg-black flex flex-col items-center justify-center overflow-hidden px-5 py-20 mobile-safe-px">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(240,173,104,0.24),transparent_45%),radial-gradient(circle_at_78%_72%,rgba(106,154,140,0.23),transparent_50%)]" />
+
 
         {!shouldReduceMotion && (
           <>

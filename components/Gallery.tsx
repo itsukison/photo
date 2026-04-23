@@ -12,27 +12,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 const planImages = [
   {
-    src: 'https://images.unsplash.com/photo-1540959733332-e94e770b63b2?q=80&w=1200&auto=format&fit=crop',
+    src: '/mainportrait.jpg',
     y: 24,
     speed: 0.8,
   },
   {
-    src: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=1200&auto=format&fit=crop',
+    src: '/redneonportrait3.jpg',
     y: 0,
     speed: 0.6,
   },
   {
-    src: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1200&auto=format&fit=crop',
+    src: '/crossingfriendship2.jpg',
     y: 48,
     speed: 1.0,
   },
   {
-    src: 'https://images.unsplash.com/photo-15420518418c7-59496ba366c7?q=80&w=1200&auto=format&fit=crop',
+    src: '/crossingsinglemain1.jpg',
     y: 12,
     speed: 0.7,
   },
   {
-    src: 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?q=80&w=1200&auto=format&fit=crop',
+    src: '/telephonecouple1.JPG',
     y: 36,
     speed: 0.9,
   },
@@ -147,12 +147,7 @@ export default function Gallery() {
                             const isPortrait = lensName.toLowerCase().includes('portrait');
                             const isFishEye = lensName.toLowerCase().includes('fish eye');
 
-                            let style = 'bg-black/5 text-notion-text-muted border-transparent';
-                            if (isPortrait) {
-                              style = 'bg-[rgba(0,255,180,0.2)] text-[#008C64] border-[rgba(0,255,180,0.5)]';
-                            } else if (isFishEye) {
-                              style = 'bg-[rgba(255,0,128,0.2)] text-[#FF0080] border-[rgba(255,0,128,0.5)]';
-                            }
+                            const style = 'bg-black/5 text-notion-text-muted border-transparent';
 
                             const displayLabel = isPortrait
                               ? 'Portrait Lens'

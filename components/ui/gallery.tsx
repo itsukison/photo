@@ -58,6 +58,16 @@ const PHOTOS = [
     src: "https://picsum.photos/seed/tokyoarchitecture/440/440",
     alt: "Tokyo modern architecture",
   },
+  {
+    id: 6,
+    order: 5,
+    x: "480px",
+    y: "62px",
+    zIndex: 5,
+    direction: "right" as Direction,
+    src: "/redneonfriendship2.jpg",
+    alt: "Red neon friendship portrait",
+  },
 ];
 
 type Direction = "left" | "right";

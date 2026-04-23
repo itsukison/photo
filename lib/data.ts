@@ -35,26 +35,26 @@ export async function fetchPlans(): Promise<Plan[]> {
 
   const enrichedDescriptions: Record<string, string> = {
     quick: 'A 30-minute portrait session capturing clean, cinematic shots of Tokyo.',
-    portrait: "A 60-minute portrait session across Tokyo's most iconic backdrops.",
-    fisheye: 'A 60-minute creative session with our signature fish-eye lens for bold, wide-angle shots.',
-    signature: 'A 60-minute session combining both lenses for a full range of cinematic shots.',
-    couple: 'A 60-minute couples shoot with both lenses, capturing your Seoul story together.',
+    portrait: "A 50-minute portrait session across Tokyo's most iconic backdrops.",
+    fisheye: 'A 50-minute creative session with our signature fish-eye lens for bold, wide-angle shots.',
+    signature: 'A 50-minute session combining both lenses for a full range of cinematic shots.',
+    couple: 'A 50-minute couples shoot with both lenses, capturing your Tokyo story together.',
   };
 
   const enrichedNames: Record<string, string> = {
-    quick: 'Quick Shot Session',
-    portrait: 'Portrait Session',
+    quick: 'Quick Shot',
+    portrait: 'Full Portrait Session',
     fisheye: 'Fish Eye Session',
     signature: 'Signature Session',
     couple: 'Couple Session',
   };
 
   const enrichedPrices: Record<string, number> = {
-    quick: 150,
-    portrait: 200,
-    fisheye: 250,
-    signature: 300,
-    couple: 350,
+    quick: 120,
+    portrait: 180,
+    fisheye: 230,
+    signature: 290,
+    couple: 330,
   };
 
   const enrichedMetadata: Record<string, { lens: string; photoCount: string }> = {
@@ -76,7 +76,7 @@ export async function fetchPlans(): Promise<Plan[]> {
       slug,
       name: enrichedNames[slug],
       price: enrichedPrices[slug],
-      duration_minutes: 60,
+      duration_minutes: 50,
       description: enrichedDescriptions[slug],
       sort_order: 100 + idx, // Ensure they appear at the end
     });
@@ -94,6 +94,14 @@ export async function fetchPlans(): Promise<Plan[]> {
   }));
 }
 
+// Deterministic UUIDs — must match migrate-locations.sql exactly.
+// Both photo and Membercheck reference the same Supabase rows by these IDs.
+const LOCATION_UUIDS = {
+  shibuya:   '11111111-1111-1111-1111-111111111111',
+  shinjuku:  '22222222-2222-2222-2222-222222222222',
+  akihabara: '33333333-3333-3333-3333-333333333333',
+} as const;
+
 export async function fetchLocations(): Promise<Location[]> {
   const { data, error } = await supabase
     .from('locations')
@@ -101,23 +109,25 @@ export async function fetchLocations(): Promise<Location[]> {
     .order('sort_order', { ascending: true });
   if (error) throw error;
 
-  const enrichedLocations = [
-    { id: 'shibuya', name: 'Shibuya', surcharge: 0 },
-    { id: 'shinjuku', name: 'Shinjuku', surcharge: 50 },
-    { id: 'akihabara', name: 'Akihabara', surcharge: 100 },
-    { id: 'seoul', name: 'Seoul', surcharge: 0, isComingSoon: true },
+  // Canonical list of Tokyo shooting locations shown to customers.
+  // "Seoul" is listed as coming-soon (frontend-only, not in DB).
+  const CANONICAL_LOCATIONS: Location[] = [
+    { id: LOCATION_UUIDS.shibuya,   name: 'Shibuya',   surcharge: 0 },
+    { id: LOCATION_UUIDS.shinjuku,  name: 'Shinjuku',  surcharge: 50 },
+    { id: LOCATION_UUIDS.akihabara, name: 'Akihabara', surcharge: 100 },
+    { id: 'coming-soon-seoul',      name: 'Seoul',      surcharge: 0, isComingSoon: true },
   ];
 
-  const dbIds = new Set((data ?? []).map((l) => l.id as string));
+  // If a DB row exists for a location (matched by our known UUID), trust its
+  // surcharge value from the DB so staff can update pricing without a code deploy.
+  const dbById = new Map((data ?? []).map((l) => [l.id as string, l]));
 
-  // Use DB id if it exists, otherwise use hardcoded id
-  // This helps maintain referential integrity if the DB rows exist
-  return enrichedLocations.map((loc) => {
-    const dbMatch = (data ?? []).find((d) => (d.name as string).toLowerCase() === loc.name.toLowerCase());
+  return CANONICAL_LOCATIONS.map((loc) => {
+    const dbRow = dbById.get(loc.id);
     return {
-      id: dbMatch ? (dbMatch.id as string) : loc.id,
+      id: loc.id,
       name: loc.name,
-      surcharge: loc.surcharge,
+      surcharge: dbRow ? (dbRow.surcharge as number) : loc.surcharge,
       isComingSoon: loc.isComingSoon,
     };
   });

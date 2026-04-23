@@ -9,9 +9,9 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const TESTIMONIALS = [
   {
     index: '01',
-    quote: "I've had professional headshots before but never like this. @ Studio ON found light in me I didn't know existed. The whole session felt completely effortless.",
-    name: 'Yoon Ji-seo',
-    role: 'Brand Strategist',
+    quote: "I've always been camera-shy, but this session felt so natural. The photos captured a version of me I've never seen before—confident and real. Best experience I've had in Tokyo.",
+    name: 'Sarah Jenkins',
+    role: 'Marketing Lead',
     bgColor: 'bg-[#3d5e45]',
     textColor: 'text-white',
     avatar: '/testimonials/avatar1.png',
@@ -23,7 +23,7 @@ const TESTIMONIALS = [
   },
   {
     index: '03',
-    quote: "I've worked with photographers across New York and Paris. The Tokyo session was different — unhurried, precise, genuinely cinematic. Every location was perfect.",
+    quote: "The level of professionalism and artistic vision was incredible. I've done shoots in NYC and LA, but nothing compares to the cinematic quality we got here in Tokyo.",
     name: 'Marcus Bell',
     role: 'Creative Director',
     bgColor: 'bg-[#c66014]',
@@ -32,9 +32,9 @@ const TESTIMONIALS = [
   },
   {
     index: '04',
-    quote: "Every frame felt considered. Not posed, not performed — just real. I've never had photos I actually loved until these.",
-    name: 'Aiko Tanaka',
-    role: 'Fashion Editor',
+    quote: "Finally, photos that don't look forced or over-posed. Every shot feels like a still from a movie. I'm absolutely obsessed with how these turned out!",
+    name: 'Emily Thompson',
+    role: 'Lifestyle Blogger',
     bgColor: 'bg-[#214051]',
     textColor: 'text-white',
     avatar: '/testimonials/avatar3.png',

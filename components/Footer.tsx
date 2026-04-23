@@ -1,10 +1,7 @@
 import Link from 'next/link';
 
 const socialLinks = [
-  { label: 'Instagram', href: '#' },
-  { label: 'X.com', href: '#' },
-  { label: 'Portfolio', href: '/#plans' },
-  { label: 'Book Session', href: '/book' },
+  { label: 'Instagram', href: 'https://www.instagram.com/studio.on.snap/' },
 ];
 
 const navRows = [

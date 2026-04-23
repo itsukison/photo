@@ -18,14 +18,12 @@ type Props = {
 async function ensureBookingPaid(sessionId: string): Promise<{ reference: string; name: string; error?: string }> {
   const supabase = getAnonSupabase();
   const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['payment_intent'] });
-  const paid = session.payment_status === 'paid';
+  // 100% coupons produce 'no_payment_required' instead of 'paid'
+  const paid = session.payment_status === 'paid' || session.payment_status === 'no_payment_required';
 
-  // Locate the booking via session id.
-  const { data: bookingRow } = await supabase
-    .from('bookings')
-    .select('id, reference, client_name, status, payment_status, stripe_payment_intent_id, stripe_charge_id')
-    .eq('stripe_checkout_session_id', sessionId)
-    .maybeSingle();
+  // Use a SECURITY DEFINER RPC so RLS doesn't block the anon read.
+  const { data: rows } = await supabase.rpc('get_booking_by_session', { p_session_id: sessionId });
+  const bookingRow = rows?.[0] ?? null;
 
   if (!bookingRow) {
     return { reference: '', name: '', error: 'Booking not found for this session.' };

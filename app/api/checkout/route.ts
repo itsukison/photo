@@ -147,6 +147,7 @@ export async function POST(req: NextRequest) {
       },
       // Expire the Stripe session in 30 minutes so it cannot be used after the
       // DB slot hold has already been swept.
+      allow_promotion_codes: true,
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
       success_url: `${baseUrl}/book/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/book/cancelled?session_id={CHECKOUT_SESSION_ID}`,
