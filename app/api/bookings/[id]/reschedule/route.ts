@@ -90,7 +90,7 @@ export async function POST(
           booking_id: id,
           kind: 'reschedule_fee',
           new_date: body.newDate,
-          new_start_hour: String(body.newStartHour),
+          new_start_minutes: String(body.newStartMinutes),
         },
         payment_intent_data: {
           metadata: {
