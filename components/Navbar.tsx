@@ -43,11 +43,14 @@ export default function Navbar() {
             <img src="/logo.png" alt="@ Studio ON" className="w-9 h-9 object-contain" />
           </Link>
           <div className="h-12 bg-white rounded-full flex items-center px-2 shadow-sm border border-black/5">
-            <Link href="#explore" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
+            <Link href="/locations" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
               Locations
             </Link>
-            <Link href="#portfolio" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
-              Portfolio
+            <Link href="/#plans" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
+              Plans
+            </Link>
+            <Link href="/about" className="px-4 text-sm font-medium text-gray-600 hover:text-black transition-colors">
+              About
             </Link>
           </div>
         </div>

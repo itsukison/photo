@@ -3,6 +3,7 @@
 // we call a small server check that retrieves the session and, if Stripe
 // says it's paid but our DB hasn't caught up, performs the transition itself.
 
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import { stripe } from '@/lib/stripe';
@@ -10,6 +11,13 @@ import { getAnonSupabase } from '@/lib/supabase-server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Booking Confirmed',
+  description: 'Your @ Studio ON Tokyo photoshoot booking has been confirmed.',
+  robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
+  alternates: { canonical: '/book/success' },
+};
 
 type Props = {
   searchParams: Promise<{ session_id?: string }>;

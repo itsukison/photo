@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '特定商取引法に基づく表記 (Commercial Disclosure)',
+  description:
+    '@ Studio ON の特定商取引法に基づく表記。販売者情報、価格、支払方法、キャンセル規定について。',
+  alternates: { canonical: '/commercial-law' },
+  robots: { index: true, follow: true },
+};
+
 export default function CommercialLawPage() {
   const content = [
     { label: '代表責任者', value: '朴施穏' },

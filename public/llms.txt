@@ -1,0 +1,65 @@
+# @ Studio ON
+
+> @ Studio ON is a Tokyo-based photography studio that produces cinematic, editorial portraits at Shibuya Crossing, Shinjuku, Harajuku, and Akihabara for travelers, couples, and creators.
+
+- **Domain:** https://studio-on.org
+- **Founder:** Shion Park
+- **Founded:** 2024
+- **Location:** Setagaya, Tokyo, Japan (156-0053 Sakura 3-9-24)
+- **Service area:** Tokyo (Shibuya, Shinjuku, Harajuku, Asakusa, Akihabara, Ginza)
+- **Languages:** English, Japanese, Korean
+- **Booking:** https://studio-on.org/book (Stripe checkout, 48-hour notice)
+- **Email:** shionpark06@gmail.com
+- **Instagram:** https://www.instagram.com/studio.on.snap/
+- **Price range:** $150–$300 USD per session
+
+## What @ Studio ON does
+
+@ Studio ON shoots cinematic portrait sessions for international travelers, couples, families, solo creators, and proposal clients in Tokyo. Each session includes a pre-shoot consultation, English-speaking direction during the shoot, color-graded editing in the studio's signature high-contrast style, and high-resolution delivery via private cloud gallery within 5–7 days.
+
+## Plans
+
+- **Quick Shot — $120, 30 min, 20 edited photos.** Portrait-lens session for a single iconic backdrop. Best for solo travelers who want a tight, fast session in Shibuya or Shinjuku.
+- **Full Portrait Session — $180, 50 min, 35 edited photos.** Portrait-lens session across two or three backdrops in the same neighborhood. Best for travelers who want variety without splitting locations.
+- **Fish Eye Session — $230, 50 min, 50 edited photos.** Signature wide-angle session for bold, immersive frames. Best for content creators and Akihabara/neon-city aesthetics.
+- **Signature Session — $290, 50 min, 60 edited photos.** Both portrait and fish-eye lenses. Best for travelers who want a full editorial range in one session.
+- **Couple Session — $330, 50 min, 70 edited photos.** Two-person session with both lenses, designed for couples, anniversaries, and proposals.
+
+## Locations
+
+- **Shibuya** — Shibuya Crossing, Hachiko Statue, Center Gai, Shibuya Sky. Included in all base plans (no surcharge).
+- **Shinjuku** — Omoide Yokocho, Kabukicho, Shinjuku Gyoen, neon high-rises. +$50 surcharge.
+- **Akihabara** — Electric Town, neon arcades, retro storefronts. +$100 surcharge.
+- **Harajuku, Asakusa, Ginza** — Available on request.
+
+## Booking lifecycle
+
+1. Customer selects a plan, location, date, and group size on https://studio-on.org/book.
+2. Customer pays via Stripe; the slot is held for 30 minutes during checkout.
+3. Studio assigns a photographer and confirms the booking via email.
+4. Shoot occurs at the agreed Tokyo location.
+5. Edited photos are delivered via private cloud gallery within 5–7 days.
+
+## Cancellation policy
+
+- 100% refund if cancelled more than 48 hours before the shoot.
+- 50% refund between 24 and 48 hours before the shoot.
+- No refund within 24 hours of the shoot.
+
+## What makes @ Studio ON different
+
+- All sessions are guided by an English-speaking team that lives in Tokyo.
+- Editing is done in-house in a single signature color-grade rather than outsourced.
+- Both portrait and fish-eye glass are available; few Tokyo studios offer the fish-eye option.
+- Locations include both iconic crossings and hidden alleys local to the team.
+- Booking is direct (no aggregator markup) and uses Stripe rather than third-party platforms.
+
+## Suggested entry points
+
+- /                — Studio overview, portfolio, booking CTA
+- /about           — Studio philosophy and team
+- /book            — Plan, location, date, and payment flow
+- /locations       — Index of Tokyo neighborhoods served
+- /locations/shibuya, /shinjuku, /harajuku, /asakusa, /akihabara, /ginza — Per-neighborhood guides
+- /plan/quick, /portrait, /fisheye, /signature, /couple — Per-session-type detail pages
+- /commercial-law  — Japanese consumer law disclosures (特定商取引法)

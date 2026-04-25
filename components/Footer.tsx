@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { STUDIO } from '@/lib/seo';
 
 const socialLinks = [
   { label: 'Instagram', href: 'https://www.instagram.com/studio.on.snap/' },
@@ -11,13 +12,15 @@ const navRows = [
   ],
   [
     { label: 'About', href: '/about' },
-    { label: 'Book', href: '/book' },
+    { label: 'Locations', href: '/locations' },
   ],
   [
+    { label: 'Book', href: '/book' },
     { label: 'Profile', href: '/profile' },
-    { label: 'Legal', href: '/commercial-law' },
   ],
 ];
+
+const ADDRESS_LINE = `${STUDIO.address.streetAddress}, ${STUDIO.address.addressLocality}, ${STUDIO.address.addressRegion} ${STUDIO.address.postalCode}`;
 
 export default function Footer() {
   return (
@@ -25,6 +28,9 @@ export default function Footer() {
       <section className="md:hidden px-5 pt-12 pb-10 mobile-safe-px">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">@ Studio ON</p>
         <h2 className="mt-3 text-[clamp(2rem,10vw,3rem)] font-medium leading-[0.95] tracking-tight">Tokyo, Japan</h2>
+        <p className="mt-3 text-xs leading-relaxed text-white/55">
+          {ADDRESS_LINE}
+        </p>
         <p className="mt-5 max-w-[32ch] text-sm leading-relaxed text-white/65">
           Cinematic portrait sessions tailored for travelers, creatives, and founders who want timeless frames.
         </p>
@@ -33,11 +39,18 @@ export default function Footer() {
           <Link href="/" className="mobile-touch-target justify-start">Home</Link>
           <Link href="/#plans" className="mobile-touch-target justify-start">Plans</Link>
           <Link href="/about" className="mobile-touch-target justify-start">About</Link>
+          <Link href="/locations" className="mobile-touch-target justify-start">Locations</Link>
           <Link href="/book" className="mobile-touch-target justify-start">Book</Link>
           <Link href="/commercial-law" className="mobile-touch-target justify-start">Legal</Link>
         </div>
 
         <div className="mt-8 flex flex-wrap gap-2">
+          <a
+            href={`mailto:${STUDIO.email}`}
+            className="mobile-touch-target rounded-full border border-white/20 px-4 text-xs font-medium text-white/80"
+          >
+            Email
+          </a>
           {socialLinks.map((link) => (
             <Link
               key={link.label}
@@ -51,7 +64,7 @@ export default function Footer() {
 
         <div className="mt-9 border-t border-white/10 pt-5 text-xs uppercase tracking-[0.14em] text-white/40">
           <div className="flex items-center justify-between">
-            <span>Est. 2024</span>
+            <span>Est. {STUDIO.foundingDate}</span>
             <Link href="#" className="text-white/60">Back to top</Link>
           </div>
         </div>
@@ -67,6 +80,11 @@ export default function Footer() {
                 <br />
                 Japan
               </p>
+              <address className="not-italic text-sm leading-relaxed text-white/55 max-w-[30ch]">
+                {STUDIO.address.streetAddress}
+                <br />
+                {STUDIO.address.addressLocality}, {STUDIO.address.addressRegion} {STUDIO.address.postalCode}
+              </address>
             </div>
 
             <div className="space-y-8">
@@ -75,10 +93,16 @@ export default function Footer() {
                 <Link href="/book" className="block transition-opacity hover:opacity-70">
                   Book via /book
                 </Link>
-                <Link href="/profile" className="block transition-opacity hover:opacity-70">
-                  Manage via /profile
+                <Link href="/locations" className="block transition-opacity hover:opacity-70">
+                  Explore /locations
                 </Link>
               </div>
+              <a
+                href={`mailto:${STUDIO.email}`}
+                className="inline-block text-sm text-white/55 hover:text-white transition-colors break-all"
+              >
+                {STUDIO.email}
+              </a>
             </div>
 
             <div className="space-y-8">
@@ -126,6 +150,14 @@ export default function Footer() {
                 <Link href="#" className="inline-flex items-center gap-2 text-[clamp(20px,1.6vw,34px)] leading-none transition-opacity hover:opacity-70">
                   <span>Back To Top</span>
                   <span className="text-[#f0ad68]">↗</span>
+                </Link>
+              </div>
+              <div className="md:text-center text-xs uppercase tracking-[0.14em] text-white/45">
+                Est. {STUDIO.foundingDate} · @ Studio ON
+              </div>
+              <div className="md:text-right">
+                <Link href="/commercial-law" className="text-xs uppercase tracking-[0.14em] text-white/45 hover:text-white transition-colors">
+                  特定商取引法に基づく表記
                 </Link>
               </div>
             </section>

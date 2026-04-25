@@ -2,7 +2,15 @@
 // without paying. The booking remains in pending_payment for up to 30 minutes
 // so they can retry without losing their slot.
 
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Payment Cancelled',
+  description: 'Your @ Studio ON booking slot is held for 30 minutes. Resume payment any time.',
+  robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
+  alternates: { canonical: '/book/cancelled' },
+};
 
 export default function CheckoutCancelledPage() {
   return (
