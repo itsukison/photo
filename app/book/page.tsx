@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { format, addDays, startOfDay } from 'date-fns';
+import { format, addDays, startOfDay, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, isBefore, addMonths, subMonths } from 'date-fns';
 import { ChevronRight, ChevronLeft, Check, Calendar as CalendarIcon, MapPin, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Location, Addon, fetchLocations, fetchAddons } from '@/lib/data';
@@ -271,6 +271,9 @@ export default function BookPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [hasHydratedDraft, setHasHydratedDraft] = useState(false);
+
+  // Calendar State
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(addDays(startOfDay(new Date()), 2)));
 
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
   const [authEmail, setAuthEmail] = useState('');
@@ -634,28 +637,28 @@ export default function BookPage() {
     window.location.href = url;
   };
 
-  const stepTitleClass = 'text-2xl md:text-3xl font-medium tracking-tight mb-7 md:mb-8';
+  const stepTitleClass = 'text-2xl md:text-3xl font-bold tracking-tight mb-6 md:mb-8 text-black';
   const actionRowClass = 'mt-8 md:mt-10 flex justify-stretch sm:justify-end';
   const actionBtnClass =
-    'mobile-touch-target w-full sm:w-auto px-8 bg-black text-white rounded-full font-medium hover:bg-black/80 transition-colors';
+    'mobile-touch-target w-full sm:w-auto px-6 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-black/80 transition-colors';
   const actionBtnDisabledClass =
-    'mobile-touch-target w-full sm:w-auto px-8 bg-black text-white rounded-full font-medium disabled:opacity-50 transition-opacity hover:bg-black/80';
+    'mobile-touch-target w-full sm:w-auto px-6 py-2.5 bg-black text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-opacity hover:bg-black/80';
 
   const renderStepAuth = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h2 className="text-2xl md:text-3xl font-medium tracking-tight mb-2">Create Your Account</h2>
+        <h2 className={stepTitleClass}>Create Your Account</h2>
         <p className="text-sm text-gray-500 font-medium">You need an account to manage your booking.</p>
       </div>
 
-      <div className="flex gap-2 p-1 bg-black/5 rounded-full w-fit">
+      <div className="flex gap-2 p-1 bg-black/5 rounded-md w-fit">
         <button
           type="button"
           onClick={() => {
             setAuthMode('signup');
             setAuthError(null);
           }}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${authMode === 'signup' ? 'bg-black text-white' : 'text-gray-500 hover:text-black'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${authMode === 'signup' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'}`}
         >
           Sign Up
         </button>
@@ -665,40 +668,40 @@ export default function BookPage() {
             setAuthMode('signin');
             setAuthError(null);
           }}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${authMode === 'signin' ? 'bg-black text-white' : 'text-gray-500 hover:text-black'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${authMode === 'signin' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'}`}
         >
           Log In
         </button>
       </div>
 
-      <form onSubmit={handleAuthSubmit} className="space-y-5">
+      <form onSubmit={handleAuthSubmit} className="space-y-4">
         {authMode === 'signup' && (
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Full Name</label>
+            <label className="block text-sm font-medium mb-1.5 text-black">Full Name</label>
             <input
               type="text"
               value={authName}
               onChange={(e) => setAuthName(e.target.value)}
               required
-              className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
+              className="w-full p-3 border border-black/10 rounded-lg text-sm bg-white focus:outline-none focus:border-black transition-colors"
             />
           </div>
         )}
 
         <div>
-          <label className="block text-sm font-medium mb-2 text-black">Email</label>
+          <label className="block text-sm font-medium mb-1.5 text-black">Email</label>
           <input
             type="email"
             value={authEmail}
             onChange={(e) => setAuthEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
+            className="w-full p-3 border border-black/10 rounded-lg text-sm bg-white focus:outline-none focus:border-black transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2 text-black">Password</label>
+          <label className="block text-sm font-medium mb-1.5 text-black">Password</label>
           <input
             type="password"
             value={authPassword}
@@ -706,13 +709,13 @@ export default function BookPage() {
             required
             minLength={authMode === 'signup' ? 8 : undefined}
             autoComplete={authMode === 'signup' ? 'new-password' : 'current-password'}
-            className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black transition-colors"
+            className="w-full p-3 border border-black/10 rounded-lg text-sm bg-white focus:outline-none focus:border-black transition-colors"
             placeholder={authMode === 'signup' ? 'Min 8 characters' : ''}
           />
         </div>
 
         {authError && (
-          <div className="p-4 border border-red-200 bg-red-50 text-red-700 rounded-2xl text-sm font-medium">
+          <div className="p-3 border border-red-200 bg-red-50 text-red-700 rounded-lg text-sm font-medium">
             {authError}
           </div>
         )}
@@ -745,20 +748,20 @@ export default function BookPage() {
             });
             nextStep();
           }}
-          className="p-5 md:p-6 border border-black/10 rounded-2xl hover:bg-black/5 cursor-pointer transition-colors flex justify-between items-center group bg-white gap-4"
+          className="p-4 border border-black/10 rounded-lg hover:bg-black/5 cursor-pointer transition-colors flex justify-between items-center group bg-white gap-4"
         >
           <div>
-            <h3 className="font-medium text-xl text-black">{plan.name}</h3>
+            <h3 className="font-medium text-lg text-black">{plan.name}</h3>
             <p className="text-gray-500 text-sm mt-1">{plan.description}</p>
-            <div className="flex items-center gap-4 mt-4 text-xs font-medium text-gray-500">
+            <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-500">
               <span className="flex items-center gap-1">
                 <CalendarIcon size={14} /> {plan.duration} min
               </span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-medium text-black">${plan.price}</div>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity text-sm mt-2 flex items-center justify-end text-gray-500 font-medium">
+            <div className="text-xl font-medium text-black">${plan.price}</div>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity text-sm mt-1 flex items-center justify-end text-gray-500 font-medium">
               Select <ChevronRight size={16} />
             </div>
           </div>
@@ -778,7 +781,7 @@ export default function BookPage() {
               if (location.isComingSoon) return;
               updateBooking({ location, date: null, time: null, extraDuration: 0 });
             }}
-            className={`p-5 border rounded-2xl transition-all ${
+            className={`p-4 border rounded-lg transition-all ${
               location.isComingSoon
                 ? 'opacity-60 grayscale-[0.3] cursor-not-allowed bg-gray-50 border-black/5'
                 : booking.location?.id === location.id
@@ -788,21 +791,21 @@ export default function BookPage() {
           >
             <div className="flex justify-between items-start">
               <div className="flex flex-col gap-1">
-                <span className="font-bold flex items-center gap-2 text-black">
-                  <MapPin size={18} /> {location.name}
+                <span className="font-medium flex items-center gap-2 text-black">
+                  <MapPin size={16} /> {location.name}
                   {location.isComingSoon && (
-                    <span className="ml-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+                    <span className="ml-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-700 text-[9px] font-semibold uppercase tracking-wider whitespace-nowrap">
                       Coming Soon
                     </span>
                   )}
                 </span>
                 {location.isComingSoon && (
-                  <span className="text-[10px] font-bold text-amber-600/80 uppercase tracking-tight">
+                  <span className="text-[10px] font-semibold text-amber-600/80 uppercase tracking-tight">
                     Summer Season
                   </span>
                 )}
               </div>
-              <span className={`text-sm font-bold ${location.isComingSoon ? 'text-gray-400' : 'text-gray-500'}`}>
+              <span className={`text-sm font-medium ${location.isComingSoon ? 'text-gray-400' : 'text-gray-500'}`}>
                 {location.isComingSoon ? '—' : location.surcharge > 0 ? `+$${location.surcharge}` : 'Included'}
               </span>
             </div>
@@ -821,82 +824,137 @@ export default function BookPage() {
   const renderStepDateTime = () => {
     const today = startOfDay(new Date());
     const minDate = addDays(today, 2); // 48 hours notice
-    const dates = Array.from({ length: 14 }, (_, index) => addDays(minDate, index));
+
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(monthStart);
+    const startDate = startOfWeek(monthStart);
+    const endDate = endOfWeek(monthEnd);
+
+    const dateFormat = "MMMM yyyy";
+    const days = eachDayOfInterval({
+        start: startDate,
+        end: endDate
+    });
+
+    const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
+    const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div>
-          <h2 className="text-2xl md:text-3xl font-medium tracking-tight mb-2">Schedule Session</h2>
-          <p className="text-sm text-gray-500 font-medium mb-6 md:mb-8">Bookings require at least 48 hours notice.</p>
+          <h2 className={stepTitleClass}>Schedule Session</h2>
+          <p className="text-sm text-gray-500 font-medium mb-4 md:mb-6">Bookings require at least 48 hours notice.</p>
         </div>
 
-        <div>
-          <h3 className="font-medium mb-4 text-black text-lg">Select Date</h3>
-          <div className="flex overflow-x-auto pb-4 gap-3 snap-x hide-scrollbar">
-            {dates.map((dateOption) => {
-              const isSelected =
-                booking.date &&
-                format(booking.date, 'yyyy-MM-dd') === format(dateOption, 'yyyy-MM-dd');
-
-              return (
-                <div
-                  key={dateOption.toISOString()}
-                  onClick={() => updateBooking({ date: dateOption, time: null, extraDuration: 0 })}
-                  className={`snap-start shrink-0 w-[5.5rem] md:w-24 p-3.5 md:p-4 border rounded-2xl cursor-pointer text-center transition-colors ${isSelected ? 'border-black bg-black text-white' : 'border-black/10 hover:bg-black/5 bg-white text-black'}`}
-                >
-                  <div className="text-xs uppercase mb-1 opacity-80 font-medium">{format(dateOption, 'EEE')}</div>
-                  <div className="text-2xl font-medium">{format(dateOption, 'd')}</div>
-                  <div className="text-xs opacity-80 mt-1 font-medium">{format(dateOption, 'MMM')}</div>
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+          <div className="w-full md:w-1/2 shrink-0">
+            <h3 className="font-semibold mb-3 text-black text-base">Select Date</h3>
+            <div className="w-full p-4 md:p-6 border border-black/10 rounded-xl bg-white select-none shadow-sm">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+              <button 
+                type="button" 
+                onClick={prevMonth}
+                className="p-2 border border-black/10 rounded-md hover:bg-black/5 transition-colors text-black"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <div className="font-bold text-lg md:text-xl text-black">
+                {format(currentMonth, dateFormat)}
+              </div>
+              <button 
+                type="button" 
+                onClick={nextMonth}
+                className="p-2 border border-black/10 rounded-md hover:bg-black/5 transition-colors text-black"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+            
+            {/* Days of Week */}
+            <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2 text-center">
+              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                <div key={day} className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  {day}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              ))}
+            </div>
 
-        {booking.date && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <h3 className="font-medium mb-4 text-black text-lg">Select Time</h3>
+            {/* Days Grid */}
+            <div className="grid grid-cols-7 gap-1 md:gap-2">
+              {days.map(day => {
+                const isSelected = booking.date && isSameDay(day, booking.date);
+                const isCurrentMonth = isSameMonth(day, monthStart);
+                const isPast = isBefore(day, minDate);
+
+                return (
+                  <div
+                    key={day.toISOString()}
+                    onClick={() => {
+                        if (!isPast) {
+                            updateBooking({ date: day, time: null, extraDuration: 0 });
+                        }
+                    }}
+                    className={`
+                      aspect-square flex flex-col items-center justify-center rounded-lg text-sm md:text-base font-semibold transition-all
+                      ${!isCurrentMonth ? 'text-gray-300' : ''}
+                      ${isPast ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}
+                      ${isSelected ? 'bg-black text-white shadow-md scale-105' : (!isPast ? 'hover:bg-black/10 text-black' : 'text-gray-400')}
+                    `}
+                  >
+                    {format(day, 'd')}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          </div>
+
+          {booking.date && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="w-full md:w-1/2">
+              <h3 className="font-semibold mb-3 text-black text-base">Select Time</h3>
             {slotsLoading ? (
-              <p className="text-sm text-gray-500 font-medium">Checking availability…</p>
+              <div className="p-8 text-center text-sm text-gray-500 font-medium border border-black/5 rounded-xl bg-white shadow-sm">Checking availability…</div>
             ) : availableSlots.length === 0 ? (
-              <p className="text-sm text-gray-500 font-medium">
+              <div className="p-8 text-center text-sm text-gray-500 font-medium border border-black/5 rounded-xl bg-white shadow-sm">
                 No photographers available for this date and location. Please pick another date.
-              </p>
+              </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3">
                 {availableSlots.map((timeOption) => (
                   <div
                     key={timeOption}
                     onClick={() => updateBooking({ time: timeOption })}
-                    className={`p-4 border rounded-2xl cursor-pointer text-center transition-colors font-medium ${booking.time === timeOption ? 'border-black bg-black/5 text-black' : 'border-black/10 hover:bg-black/5 bg-white text-gray-600'}`}
+                    className={`py-3 md:py-4 px-3 border rounded-xl cursor-pointer text-center transition-all text-sm md:text-base font-semibold ${booking.time === timeOption ? 'border-black bg-black text-white shadow-md scale-105' : 'border-black/10 hover:border-black/30 hover:bg-black/5 bg-white text-gray-700'}`}
                   >
                     {timeOption}
                   </div>
                 ))}
               </div>
             )}
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+        </div>
 
         {booking.time && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pt-6 border-t border-black/10">
             <h3 className="font-medium mb-4 text-black text-lg">Need more time?</h3>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-black/10 rounded-2xl bg-white gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-black/10 rounded-lg bg-white gap-4">
               <div className="pr-2">
-                <div className="font-medium text-black">Extend Session</div>
-                <div className="text-sm text-gray-500">+$100 per 30 mins</div>
+                <div className="font-medium text-black text-sm">Extend Session</div>
+                <div className="text-xs text-gray-500">+$100 per 30 mins</div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() => updateBooking({ extraDuration: Math.max(0, booking.extraDuration - 30) })}
-                  className="w-10 h-10 flex items-center justify-center border border-black/10 rounded-full hover:bg-black/5 text-black transition-colors"
+                  className="w-8 h-8 flex items-center justify-center border border-black/10 rounded-md hover:bg-black/5 text-black transition-colors"
                 >
                   -
                 </button>
-                <span className="w-16 text-center font-medium text-black">+{booking.extraDuration}m</span>
+                <span className="w-12 text-center text-sm font-medium text-black">+{booking.extraDuration}m</span>
                 <button
                   onClick={() => updateBooking({ extraDuration: booking.extraDuration + 30 })}
-                  className="w-10 h-10 flex items-center justify-center border border-black/10 rounded-full hover:bg-black/5 text-black transition-colors"
+                  className="w-8 h-8 flex items-center justify-center border border-black/10 rounded-md hover:bg-black/5 text-black transition-colors"
                 >
                   +
                 </button>
@@ -919,29 +977,29 @@ export default function BookPage() {
   };
 
   const renderStepGroupSize = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <h2 className={stepTitleClass}>Group Size</h2>
-      <div className="p-5 md:p-6 border border-black/10 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-white">
+      <div className="p-4 border border-black/10 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-white">
         <div className="flex items-start md:items-center gap-4">
-          <div className="w-12 h-12 bg-black/5 rounded-full flex items-center justify-center">
-            <Users size={24} className="text-gray-500" />
+          <div className="w-10 h-10 bg-black/5 rounded-md flex items-center justify-center">
+            <Users size={20} className="text-gray-500" />
           </div>
           <div>
-            <div className="font-medium text-lg text-black">Number of People</div>
-            <div className="text-sm text-gray-500">Base price includes 1 person. +$7 per extra person. Max 10.</div>
+            <div className="font-medium text-sm text-black">Number of People</div>
+            <div className="text-xs text-gray-500">Base price includes 1 person. +$7 per extra person. Max 10.</div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => updateBooking({ groupSize: Math.max(1, booking.groupSize - 1) })}
-            className="w-10 h-10 flex items-center justify-center border border-black/10 rounded-full hover:bg-black/5 text-black transition-colors"
+            className="w-8 h-8 flex items-center justify-center border border-black/10 rounded-md hover:bg-black/5 text-black transition-colors"
           >
             -
           </button>
-          <span className="w-8 text-center font-semibold text-xl text-black">{booking.groupSize}</span>
+          <span className="w-8 text-center text-sm font-semibold text-black">{booking.groupSize}</span>
           <button
             onClick={() => updateBooking({ groupSize: Math.min(10, booking.groupSize + 1) })}
-            className="w-10 h-10 flex items-center justify-center border border-black/10 rounded-full hover:bg-black/5 text-black transition-colors"
+            className="w-8 h-8 flex items-center justify-center border border-black/10 rounded-md hover:bg-black/5 text-black transition-colors"
           >
             +
           </button>
@@ -968,7 +1026,7 @@ export default function BookPage() {
     const hasRetouch = booking.addons.some((addon) => addon.slug === 'retouch');
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <h2 className={stepTitleClass}>Enhance Your Session</h2>
         <div className="space-y-3">
           {addonList.map((addon) => {
@@ -977,28 +1035,28 @@ export default function BookPage() {
               <div
                 key={addon.id}
                 onClick={() => toggleAddon(addon)}
-                className={`p-5 border rounded-2xl cursor-pointer transition-colors flex justify-between items-center ${isSelected ? 'border-black bg-black/5' : 'border-black/10 hover:bg-black/5 bg-white'}`}
+                className={`p-4 border rounded-lg cursor-pointer transition-colors flex justify-between items-center ${isSelected ? 'border-black bg-black/5' : 'border-black/10 hover:bg-black/5 bg-white'}`}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${isSelected ? 'bg-black border-black text-white' : 'border-black/20'}`}>
-                    {isSelected && <Check size={14} />}
+                <div className="flex items-center gap-3">
+                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-black border-black text-white' : 'border-black/20'}`}>
+                    {isSelected && <Check size={12} />}
                   </div>
-                  <span className="font-medium text-black">{addon.name}</span>
+                  <span className="font-medium text-sm text-black">{addon.name}</span>
                 </div>
-                <span className="text-gray-500 font-medium">+${addon.price}</span>
+                <span className="text-gray-500 text-sm font-medium">+${addon.price}</span>
               </div>
             );
           })}
 
           <div
             onClick={() => updateBooking({ addons: [], retouchNotes: '' })}
-            className={`p-5 border rounded-2xl cursor-pointer transition-colors flex justify-between items-center ${booking.addons.length === 0 ? 'border-black bg-black/5' : 'border-black/10 hover:bg-black/5 bg-white'}`}
+            className={`p-4 border rounded-lg cursor-pointer transition-colors flex justify-between items-center ${booking.addons.length === 0 ? 'border-black bg-black/5' : 'border-black/10 hover:bg-black/5 bg-white'}`}
           >
-            <div className="flex items-center gap-4">
-              <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${booking.addons.length === 0 ? 'border-black' : 'border-black/20'}`}>
-                {booking.addons.length === 0 && <div className="w-3 h-3 bg-black rounded-full" />}
+            <div className="flex items-center gap-3">
+              <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${booking.addons.length === 0 ? 'border-black' : 'border-black/20'}`}>
+                {booking.addons.length === 0 && <div className="w-2.5 h-2.5 bg-black rounded-sm" />}
               </div>
-              <span className="font-medium text-black">Nothing needed</span>
+              <span className="font-medium text-sm text-black">Nothing needed</span>
             </div>
           </div>
         </div>
@@ -1011,13 +1069,13 @@ export default function BookPage() {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="pt-6">
-                <label className="block text-sm font-medium mb-2 text-black">Retouching Notes (Optional)</label>
+              <div className="pt-4">
+                <label className="block text-sm font-medium mb-1.5 text-black">Retouching Notes (Optional)</label>
                 <textarea
                   value={booking.retouchNotes}
                   onChange={(e) => updateBooking({ retouchNotes: e.target.value })}
                   placeholder="E.g., Please remove blemishes, soften skin..."
-                  className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black resize-none h-32 transition-colors"
+                  className="w-full p-3 border border-black/10 rounded-lg text-sm bg-white focus:outline-none focus:border-black resize-none h-24 transition-colors"
                 />
               </div>
             </motion.div>
@@ -1039,48 +1097,48 @@ export default function BookPage() {
     const showCountryError = clientInfoTouched.country;
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <h2 className={stepTitleClass}>Your Details</h2>
-        <div className="space-y-5">
+        <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Full Name *</label>
+            <label className="block text-sm font-medium mb-1.5 text-black">Full Name *</label>
             <input
               type="text"
               value={booking.clientInfo.name}
               onChange={(e) => updateClientInfo({ name: e.target.value })}
               onBlur={() => setClientFieldTouched('name')}
-              className={`w-full p-4 border rounded-2xl bg-white focus:outline-none transition-colors ${showNameError && clientInfoErrors.name ? 'border-red-300 focus:border-red-500' : 'border-black/10 focus:border-black'}`}
+              className={`w-full p-3 border rounded-lg text-sm bg-white focus:outline-none transition-colors ${showNameError && clientInfoErrors.name ? 'border-red-300 focus:border-red-500' : 'border-black/10 focus:border-black'}`}
               required
             />
             {showNameError && clientInfoErrors.name && (
-              <p className="mt-2 text-sm text-red-600">{clientInfoErrors.name}</p>
+              <p className="mt-1 text-xs text-red-600">{clientInfoErrors.name}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-black">WhatsApp / Phone *</label>
+              <label className="block text-sm font-medium mb-1.5 text-black">WhatsApp / Phone *</label>
               <input
                 type="tel"
                 value={booking.clientInfo.phone}
                 onChange={(e) => updateClientInfo({ phone: e.target.value })}
                 onBlur={() => setClientFieldTouched('phone')}
-                className={`w-full p-4 border rounded-2xl bg-white focus:outline-none transition-colors ${showPhoneError && clientInfoErrors.phone ? 'border-red-300 focus:border-red-500' : 'border-black/10 focus:border-black'}`}
+                className={`w-full p-3 border rounded-lg text-sm bg-white focus:outline-none transition-colors ${showPhoneError && clientInfoErrors.phone ? 'border-red-300 focus:border-red-500' : 'border-black/10 focus:border-black'}`}
                 placeholder="+1 555 123 4567"
                 required
               />
               {showPhoneError && clientInfoErrors.phone && (
-                <p className="mt-2 text-sm text-red-600">{clientInfoErrors.phone}</p>
+                <p className="mt-1 text-xs text-red-600">{clientInfoErrors.phone}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-black">Country *</label>
+              <label className="block text-sm font-medium mb-1.5 text-black">Country *</label>
               <select
                 value={booking.clientInfo.country}
                 onChange={(e) => updateClientInfo({ country: e.target.value })}
                 onBlur={() => setClientFieldTouched('country')}
-                className={`w-full p-4 border rounded-2xl bg-white focus:outline-none appearance-none transition-colors ${showCountryError && clientInfoErrors.country ? 'border-red-300 focus:border-red-500' : 'border-black/10 focus:border-black'}`}
+                className={`w-full p-3 border rounded-lg text-sm bg-white focus:outline-none appearance-none transition-colors ${showCountryError && clientInfoErrors.country ? 'border-red-300 focus:border-red-500' : 'border-black/10 focus:border-black'}`}
                 required
               >
                 <option value="">Select Country</option>
@@ -1093,17 +1151,17 @@ export default function BookPage() {
                 <option value="OTHER">Other</option>
               </select>
               {showCountryError && clientInfoErrors.country && (
-                <p className="mt-2 text-sm text-red-600">{clientInfoErrors.country}</p>
+                <p className="mt-1 text-xs text-red-600">{clientInfoErrors.country}</p>
               )}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Special Requests</label>
+            <label className="block text-sm font-medium mb-1.5 text-black">Special Requests</label>
             <textarea
               value={booking.clientInfo.requests}
               onChange={(e) => updateClientInfo({ requests: e.target.value })}
-              className="w-full p-4 border border-black/10 rounded-2xl bg-white focus:outline-none focus:border-black resize-none h-32 transition-colors"
+              className="w-full p-3 border border-black/10 rounded-lg text-sm bg-white focus:outline-none focus:border-black resize-none h-24 transition-colors"
             />
           </div>
         </div>
@@ -1129,18 +1187,18 @@ export default function BookPage() {
     const total = calculateTotal();
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <h2 className={stepTitleClass}>Review & Confirm</h2>
 
-        <div className="border border-black/10 rounded-2xl overflow-hidden bg-white">
-          <div className="bg-black/5 p-6 border-b border-black/10">
-            <h3 className="font-medium text-xl text-black">{booking.plan?.name}</h3>
+        <div className="border border-black/10 rounded-lg overflow-hidden bg-white">
+          <div className="bg-black/5 p-4 md:p-5 border-b border-black/10">
+            <h3 className="font-medium text-lg text-black">{booking.plan?.name}</h3>
             <p className="text-sm text-gray-500 mt-1 font-medium">
               {booking.date ? format(booking.date, 'MMMM d, yyyy') : ''} at {booking.time}
             </p>
           </div>
 
-          <div className="p-6 space-y-4 text-sm font-medium">
+          <div className="p-4 md:p-5 space-y-3 text-sm font-medium">
             <div className="flex justify-between">
               <span className="text-gray-500">Base Plan ({booking.plan?.duration}m)</span>
               <span className="text-black">${booking.plan?.price}</span>
@@ -1170,22 +1228,22 @@ export default function BookPage() {
               </div>
             ))}
 
-            <div className="pt-4 mt-4 border-t border-black/10 flex justify-between font-medium text-xl text-black">
+            <div className="pt-4 mt-4 border-t border-black/10 flex justify-between font-medium text-lg text-black">
               <span>Total</span>
               <span>${total}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-start gap-3 mt-8">
+        <div className="flex items-start gap-3 mt-6">
           <div
             onClick={() => updateBooking({ agreedToPolicy: !booking.agreedToPolicy })}
-            className={`mt-1 w-6 h-6 rounded-md border flex items-center justify-center cursor-pointer shrink-0 transition-colors ${booking.agreedToPolicy ? 'bg-black border-black text-white' : 'border-black/20 bg-white'}`}
+            className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center cursor-pointer shrink-0 transition-colors ${booking.agreedToPolicy ? 'bg-black border-black text-white' : 'border-black/20 bg-white'}`}
           >
-            {booking.agreedToPolicy && <Check size={14} />}
+            {booking.agreedToPolicy && <Check size={12} />}
           </div>
           <div
-            className="text-sm text-gray-500 font-medium cursor-pointer leading-relaxed"
+            className="text-xs text-gray-500 font-medium cursor-pointer leading-relaxed"
             onClick={() => updateBooking({ agreedToPolicy: !booking.agreedToPolicy })}
           >
             I agree to the cancellation policy: <strong className="text-black">100% refund</strong> if
@@ -1196,7 +1254,7 @@ export default function BookPage() {
         </div>
 
         {submitError && (
-          <div className="p-4 border border-red-200 bg-red-50 text-red-700 rounded-2xl text-sm font-medium">
+          <div className="p-3 border border-red-200 bg-red-50 text-red-700 rounded-lg text-sm font-medium">
             {submitError}
           </div>
         )}
