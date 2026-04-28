@@ -9,7 +9,7 @@
 - **Service area:** Tokyo (Shibuya, Shinjuku, Harajuku, Asakusa, Akihabara, Ginza)
 - **Languages:** English, Japanese, Korean
 - **Booking:** https://studio-on.org/book (Stripe checkout, 48-hour notice)
-- **Email:** shionpark06@gmail.com
+- **Email:** studio.on.snap@gmail.com
 - **Instagram:** https://www.instagram.com/studio.on.snap/
 - **Price range:** $150–$300 USD per session
 

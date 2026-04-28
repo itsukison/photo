@@ -13,7 +13,7 @@ export default function CommercialLawPage() {
     { label: '代表責任者', value: '朴施穏' },
     { label: '所在地', value: '〒156-0053 東京都世田谷区桜3-9-24' },
     { label: '電話番号', value: '09012954319' },
-    { label: 'メールアドレス', value: 'shionpark06@gmail.com' },
+    { label: 'メールアドレス', value: 'studio.on.snap@gmail.com' },
     { label: '販売価格', value: '各プランの購入ページにて表示する価格' },
     { label: '商品代金以外の必要料金', value: 'インターネット接続時の通信料等の通信費用はお客様負担となります。' },
     { label: '代金の支払時期', value: 'クレジットカード決済時（ご利用のカード会社の引き落とし日）' },

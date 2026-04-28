@@ -33,7 +33,7 @@ const ABOUT_FAQ = [
   {
     question: 'Are you available for commercial or brand work?',
     answer:
-      'Yes. The studio takes on selected commercial briefs (brand lookbooks, hotel and travel campaigns, content creator partnerships). Reach out via shionpark06@gmail.com with the brief and timeline.',
+      'Yes. The studio takes on selected commercial briefs (brand lookbooks, hotel and travel campaigns, content creator partnerships). Reach out via studio.on.snap@gmail.com with the brief and timeline.',
   },
   {
     question: 'Where is the studio based?',
