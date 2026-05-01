@@ -72,6 +72,7 @@ export default function ProfilePage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [policyMap, setPolicyMap] = useState<Record<string, Policy | null>>({});
   const [cancelBusyId, setCancelBusyId] = useState<string | null>(null);
+  const [resumeBusyId, setResumeBusyId] = useState<string | null>(null);
   const [rescheduleBusyId, setRescheduleBusyId] = useState<string | null>(null);
   const [rescheduleOpenId, setRescheduleOpenId] = useState<string | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState<Date | null>(null);
@@ -83,6 +84,10 @@ export default function ProfilePage() {
   const loadBookings = useCallback(async () => {
     if (!user) return;
     setLoading(true);
+    // Auto-cancel pending_payment bookings whose 30-minute hold has passed,
+    // so they don't linger in the customer's profile. RPC is idempotent and
+    // scoped server-side; we don't await its result for UI purposes.
+    try { await supabase.rpc('sweep_expired_pending_bookings'); } catch {}
     const { data, error } = await supabase
       .from('bookings')
       .select(`
@@ -181,6 +186,49 @@ export default function ProfilePage() {
       );
       await loadBookings();
       await fetchPolicy(id);
+    } finally {
+      setCancelBusyId(null);
+    }
+  };
+
+  const handleResumePayment = async (id: string) => {
+    setResumeBusyId(id);
+    setActionError(null);
+    setActionNotice(null);
+    try {
+      const res = await authedFetch('/api/checkout/resume', {
+        method: 'POST',
+        body: JSON.stringify({ bookingId: id }),
+      });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({})) as { error?: string };
+        setActionError(payload.error ?? 'Failed to resume payment.');
+        return;
+      }
+      const payload = (await res.json()) as { url?: string };
+      if (payload.url) {
+        window.location.href = payload.url;
+        return;
+      }
+      setActionError('Could not start checkout. Please try again.');
+    } finally {
+      setResumeBusyId(null);
+    }
+  };
+
+  const handleCancelPending = async (id: string) => {
+    if (!confirm('Cancel this unpaid booking? Your slot will be released.')) return;
+    setCancelBusyId(id);
+    setActionError(null);
+    try {
+      const res = await authedFetch(`/api/bookings/${id}/cancel-pending`, { method: 'POST' });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({})) as { error?: string };
+        setActionError(payload.error ?? 'Failed to cancel.');
+        return;
+      }
+      setActionNotice('Booking cancelled.');
+      await loadBookings();
     } finally {
       setCancelBusyId(null);
     }
@@ -390,7 +438,25 @@ export default function ProfilePage() {
                             <div>
                               <h4 className="text-[11px] md:text-sm font-bold tracking-wider uppercase text-gray-500 mb-4">Actions</h4>
                               {isPendingPayment ? (
-                                <p className="text-sm text-gray-500 font-medium">Waiting for your payment to complete. If you didn&apos;t finish checkout, you can re-book — your slot is held for up to 30 minutes.</p>
+                                <div className="space-y-3">
+                                  <p className="text-sm text-gray-500 font-medium leading-relaxed">
+                                    Your slot is held but payment hasn&apos;t completed. Resume checkout to confirm your booking, or release the slot.
+                                  </p>
+                                  <button
+                                    onClick={() => handleResumePayment(booking.id)}
+                                    disabled={resumeBusyId === booking.id}
+                                    className="w-full py-2.5 px-4 bg-black text-white rounded-xl text-sm font-medium hover:bg-black/80 transition-colors disabled:opacity-50"
+                                  >
+                                    {resumeBusyId === booking.id ? 'Starting checkout…' : 'Resume Payment'}
+                                  </button>
+                                  <button
+                                    onClick={() => handleCancelPending(booking.id)}
+                                    disabled={cancelBusyId === booking.id}
+                                    className="w-full py-2.5 px-4 bg-white border border-black/10 rounded-xl text-sm font-medium text-black hover:bg-black/5 transition-colors disabled:opacity-50"
+                                  >
+                                    {cancelBusyId === booking.id ? 'Cancelling…' : 'Cancel Booking'}
+                                  </button>
+                                </div>
                               ) : isCancelled ? (
                                 <p className="text-sm text-gray-500 font-medium">This booking has been cancelled.</p>
                               ) : booking.rawStatus === 'completed' ? (
