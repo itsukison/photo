@@ -22,17 +22,17 @@ const planImages = [
     speed: 0.6,
   },
   {
-    src: '/crossingfriendship2.jpg',
+    src: '/crossing_yellow.JPG',
     y: 48,
     speed: 1.0,
   },
   {
-    src: '/crossingsinglemain1.jpg',
+    src: '/blackman_crossing.JPG',
     y: 12,
     speed: 0.7,
   },
   {
-    src: '/telephonecouple1.JPG',
+    src: '/mighty_pink.JPG',
     y: 36,
     speed: 0.9,
   },
@@ -117,13 +117,18 @@ export default function Gallery() {
                   </div>
                   <div className="px-1">
                     {/* Top Row: Name & Price */}
-                    <div className="flex justify-between items-baseline mb-2">
+                    <div className="flex justify-between items-start mb-2">
                       <h3 className="text-xl md:text-[22px] font-bold tracking-tight text-black">
                         {plan.name}
                       </h3>
-                      <span className="text-xl md:text-[22px] font-bold text-black">
-                        ${plan.price}
-                      </span>
+                      <div className="flex flex-col items-end shrink-0 ml-3">
+                        <span className="text-[11px] font-semibold text-black/30 line-through leading-none mb-0.5">
+                          ${plan.originalPrice}
+                        </span>
+                        <span className="text-xl md:text-[22px] font-bold text-black leading-tight">
+                          ${plan.price}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Description */}

@@ -759,8 +759,11 @@ export default function BookPage() {
               </span>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-xl font-medium text-black">${plan.price}</div>
+          <div className="text-right shrink-0">
+            <div className="flex flex-col items-end">
+              <span className="text-[11px] font-semibold text-black/30 line-through leading-none mb-0.5">${plan.originalPrice}</span>
+              <span className="text-xl font-medium text-black leading-tight">${plan.price}</span>
+            </div>
             <div className="opacity-0 group-hover:opacity-100 transition-opacity text-sm mt-1 flex items-center justify-end text-gray-500 font-medium">
               Select <ChevronRight size={16} />
             </div>
@@ -1201,7 +1204,10 @@ export default function BookPage() {
           <div className="p-4 md:p-5 space-y-3 text-sm font-medium">
             <div className="flex justify-between">
               <span className="text-gray-500">Base Plan ({booking.plan?.duration}m)</span>
-              <span className="text-black">${booking.plan?.price}</span>
+              <span className="flex items-baseline gap-1.5">
+                <span className="text-[11px] font-semibold text-black/30 line-through">${booking.plan?.originalPrice}</span>
+                <span className="text-black">${booking.plan?.price}</span>
+              </span>
             </div>
 
             <div className="flex justify-between">

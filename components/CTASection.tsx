@@ -9,7 +9,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import Image from 'next/image';
 
 const images = [
-  '/crossingfriendship4.jpg',
+  '/crossing_yellow.JPG',
   '/crossingpinkhair2.jpg',
   '/crossingsingle2.jpg',
   '/neonvandingportrait1.jpg',

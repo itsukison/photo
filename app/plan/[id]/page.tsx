@@ -17,9 +17,9 @@ type Props = {
 const planImages: Record<string, string> = {
   quick: '/mainportrait.jpg',
   portrait: '/redneonportrait3.jpg',
-  fisheye: '/crossingfriendship2.jpg',
-  signature: '/crossingsinglemain1.jpg',
-  couple: '/telephonecouple1.JPG',
+  fisheye: '/crossing_yellow.JPG',
+  signature: '/blackman_crossing.JPG',
+  couple: '/mighty_pink.JPG',
 };
 
 export function generateStaticParams() {

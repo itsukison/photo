@@ -5,6 +5,7 @@ export type Plan = {
   slug: string;
   name: string;
   price: number;
+  originalPrice: number;
   duration: number;
   description: string;
   lens: string;
@@ -50,6 +51,14 @@ export async function fetchPlans(): Promise<Plan[]> {
   };
 
   const enrichedPrices: Record<string, number> = {
+    quick: 100,
+    portrait: 150,
+    fisheye: 200,
+    signature: 230,
+    couple: 250,
+  };
+
+  const enrichedOriginalPrices: Record<string, number> = {
     quick: 120,
     portrait: 180,
     fisheye: 230,
@@ -87,6 +96,7 @@ export async function fetchPlans(): Promise<Plan[]> {
     slug: p.slug as string,
     name: enrichedNames[p.slug as string] || (p.name as string),
     price: enrichedPrices[p.slug as string] || (p.price as number),
+    originalPrice: enrichedOriginalPrices[p.slug as string] || enrichedPrices[p.slug as string] || (p.price as number),
     duration: p.duration_minutes as number,
     description: enrichedDescriptions[p.slug as string] || ((p.description as string) ?? ''),
     lens: enrichedMetadata[p.slug as string]?.lens || 'Portrait Lens',

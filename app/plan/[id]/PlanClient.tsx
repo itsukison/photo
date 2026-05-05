@@ -12,17 +12,17 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const planImages: Record<string, string> = {
   quick: '/mainportrait.jpg',
   portrait: '/redneonportrait3.jpg',
-  fisheye: '/crossingfriendship2.jpg',
-  signature: '/crossingsinglemain1.jpg',
-  couple: '/telephonecouple1.JPG',
+  fisheye: '/crossing_yellow.JPG',
+  signature: '/blackman_crossing.JPG',
+  couple: '/mighty_pink.JPG',
 };
 
 const secondaryImages: Record<string, string[]> = {
   quick: ['/neonvandingportrait1.jpg', '/neonvandingportrait3.jpg'],
   portrait: ['/redneonportrait1.jpg', '/redneonportrait2.jpg'],
-  fisheye: ['/crossingfriendship1.jpg', '/crossingfriendship3.jpg'],
-  signature: ['/crossingsinglemain2.JPG', '/crossingsinglemain3.jpg'],
-  couple: ['/telephonejeans.JPG', '/crossingcouple1.JPG'],
+  fisheye: ['/crossing_family.JPG', '/crossingfriendship1.jpg'],
+  signature: ['/blackman.JPG', '/crossingsinglemain2.JPG'],
+  couple: ['/mighty_main.JPG', '/crossingcouple1.JPG'],
 };
 
 export default function PlanDetailPage() {
@@ -155,12 +155,22 @@ export default function PlanDetailPage() {
 
             {/* BOOK BUTTON */}
             <div className="pt-3 lg:pt-4 col-span-1 md:col-span-2 lg:col-span-4">
-              <Link
-                href={`/book?plan=${plan.slug}`}
-                className="w-full lg:w-max px-10 h-14 rounded-full bg-black text-white flex items-center justify-center text-[12px] font-bold uppercase tracking-[0.1em] hover:bg-black/80 transition-all text-center whitespace-nowrap shadow-lg shadow-black/10 active:scale-[0.98]"
-              >
-                Book This Session — ${plan.price}
-              </Link>
+              <div className="flex items-center gap-5">
+                <Link
+                  href={`/book?plan=${plan.slug}`}
+                  className="w-full lg:w-max px-10 h-14 rounded-full bg-black text-white flex items-center justify-center text-[12px] font-bold uppercase tracking-[0.1em] hover:bg-black/80 transition-all text-center whitespace-nowrap shadow-lg shadow-black/10 active:scale-[0.98]"
+                >
+                  Book This Session
+                </Link>
+                <div className="flex flex-col">
+                  <span className="text-[11px] font-semibold text-black/30 line-through leading-none mb-0.5">
+                    ${plan.originalPrice}
+                  </span>
+                  <span className="text-2xl font-bold text-black leading-tight">
+                    ${plan.price}
+                  </span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -286,7 +296,9 @@ export default function PlanDetailPage() {
               href={`/book?plan=${plan.slug}`}
               className="mobile-touch-target flex w-full items-center justify-center rounded-full bg-black px-6 text-sm font-semibold uppercase tracking-[0.08em] text-white"
             >
-              Book This Plan — ${plan.price}
+              Book This Plan&nbsp;&mdash;&nbsp;
+              <span className="line-through text-white/40 font-medium mr-1">${plan.originalPrice}</span>
+              ${plan.price}
             </Link>
           </div>
         </div>

@@ -35,8 +35,8 @@ const PHOTOS = [
     y: "8px",
     zIndex: 30,
     direction: "right" as Direction,
-    src: "/neonvandingportrait2.jpg",
-    alt: "Asakusa portrait",
+    src: "/crossing_yellow.JPG",
+    alt: "Bold wide-angle Shibuya Crossing portrait, Tokyo",
   },
   {
     id: 4,
