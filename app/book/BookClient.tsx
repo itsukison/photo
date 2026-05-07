@@ -57,6 +57,8 @@ const INITIAL_STATE: BookingState = {
 const BOOKING_DRAFT_STORAGE_KEY = 'photo-booking-draft-v1';
 const BOOKING_DRAFT_VERSION = 1;
 
+const ANALYTICS_SESSION_KEY = 'photo-analytics-session-id';
+
 const STEP_AUTH = 0;
 const STEP_PLAN = 1;
 const STEP_LOCATION = 2;
@@ -66,6 +68,17 @@ const STEP_ADDONS = 5;
 const STEP_CLIENT_INFO = 6;
 const STEP_REVIEW = 7;
 const TOTAL_STEPS = 8;
+
+const STEP_NAMES: Record<number, string> = {
+  [STEP_AUTH]: 'auth',
+  [STEP_PLAN]: 'plan',
+  [STEP_LOCATION]: 'location',
+  [STEP_DATETIME]: 'datetime',
+  [STEP_GROUP_SIZE]: 'group_size',
+  [STEP_ADDONS]: 'addons',
+  [STEP_CLIENT_INFO]: 'client_info',
+  [STEP_REVIEW]: 'review',
+};
 
 const PHONE_PATTERN = /^\+?[0-9()\-.\s]{7,20}$/;
 
@@ -431,6 +444,12 @@ export default function BookPage() {
   }, [step, hasHydratedDraft]);
 
   useEffect(() => {
+    if (!hasHydratedDraft || !user || step === STEP_AUTH) return;
+    trackEvent('booking_step_entered', { step, step_name: STEP_NAMES[step] ?? 'unknown' });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, hasHydratedDraft, user]);
+
+  useEffect(() => {
     if (!user || !booking.date || !booking.location || !booking.plan) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       clearAvailableSlots();
@@ -497,6 +516,26 @@ export default function BookPage() {
   const setClientFieldTouched = (field: keyof ClientInfoTouched) => {
     setClientInfoTouched((prev) => ({ ...prev, [field]: true }));
   };
+
+  const trackEvent = useCallback(async (eventType: string, properties: Record<string, unknown> = {}) => {
+    try {
+      let sessionId = window.sessionStorage.getItem(ANALYTICS_SESSION_KEY);
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        window.sessionStorage.setItem(ANALYTICS_SESSION_KEY, sessionId);
+      }
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) return;
+      fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ event_type: eventType, properties, session_id: sessionId }),
+      }).catch(() => {});
+    } catch {
+      // Never surface tracking errors
+    }
+  }, []);
 
   const handleClientInfoContinue = () => {
     if (!isClientInfoStepValid) {
@@ -626,12 +665,14 @@ export default function BookPage() {
       return;
     }
 
-    const { url } = (await res.json()) as { url?: string };
+    const { url, bookingId } = (await res.json()) as { url?: string; bookingId?: string };
     if (!url) {
       setSubmitError('Payment session did not return a redirect URL.');
       setSubmitting(false);
       return;
     }
+
+    await trackEvent('payment_initiated', { booking_id: bookingId, amount: calculateTotal() });
 
     // Hand off to Stripe. The booking is now held for 30 minutes.
     window.location.href = url;

@@ -4,6 +4,7 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { TrackCancellation } from './TrackCancellation';
 
 export const metadata: Metadata = {
   title: 'Payment Cancelled',
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default function CheckoutCancelledPage() {
   return (
     <main className="min-h-screen bg-[#fcfcfc] text-black pt-24 md:pt-32 pb-20 md:pb-24">
+      <TrackCancellation />
       <div className="w-full max-w-xl mx-auto px-4 md:px-6 text-center py-12">
         <h1 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">Payment Not Completed</h1>
         <p className="text-gray-500 font-medium max-w-md mx-auto mb-10">
