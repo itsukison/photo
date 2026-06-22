@@ -9,12 +9,12 @@ import { absoluteUrl, faqJsonLd, SITE_URL, SITE_NAME, STUDIO } from '@/lib/seo';
 export const metadata: Metadata = {
   title: 'Tokyo Photoshoot — Cinematic Portraits in Shibuya, Shinjuku & Harajuku',
   description:
-    'Book a cinematic Tokyo photoshoot with @ Studio ON. English-speaking photographers, editorial portraits at Shibuya Crossing, Shinjuku, Harajuku, and Akihabara. Sessions from $150.',
+    'Book a cinematic Tokyo photoshoot with @ Studio ON. English-speaking photographers, editorial portraits at Shibuya Crossing, Shinjuku, Harajuku, and Akihabara. Sessions from $70.',
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Tokyo Photoshoot — Cinematic Portraits in Shibuya, Shinjuku & Harajuku',
     description:
-      'Editorial portrait sessions across Tokyo for travelers, couples, and creators. From $150.',
+      'Editorial portrait sessions across Tokyo for travelers, couples, and creators. From $70.',
     url: SITE_URL,
     type: 'website',
   },
@@ -24,7 +24,7 @@ const HOME_FAQ = [
   {
     question: 'How much does a Tokyo photoshoot with @ Studio ON cost?',
     answer:
-      'Sessions start at $150 for a 30-minute Quick Shot and run up to $300 for the Couple Session, which includes both portrait and fish-eye lenses across a 50-minute shoot. Shibuya is included; Shinjuku adds $50 and Akihabara adds $100 for travel time.',
+      'Sessions start at $70 for a 30-minute Tokyo Quick Shot and run up to $300 for the Couple / Proposal Session, which includes both portrait and fish-eye lenses across a 50-minute shoot. Shibuya is included; Shinjuku adds $50 and Akihabara adds $100 for travel time.',
   },
   {
     question: 'Where in Tokyo do you photograph?',
@@ -54,7 +54,7 @@ const HOME_FAQ = [
   {
     question: 'Do you handle proposal photoshoots in Tokyo?',
     answer:
-      'Yes. Proposals are typically booked under the Couple Session and arranged in advance with a discreet meeting plan so the partner being proposed to does not see the photographer until the moment.',
+      'Yes. Proposals are booked under the Couple / Proposal Session and arranged in advance with a discreet meeting plan so the partner being proposed to does not see the photographer until the moment.',
   },
   {
     question: 'What should I wear for a Tokyo photoshoot?',

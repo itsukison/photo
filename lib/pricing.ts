@@ -6,7 +6,7 @@ import type { Plan } from './plans';
 import type { Location, Addon } from './data';
 
 export type PricingInput = {
-  plan: Pick<Plan, 'price'>;
+  plan: Pick<Plan, 'price' | 'extraPersonPrice'>;
   location: Pick<Location, 'surcharge'>;
   extraDurationMinutes: number;
   groupSize: number;
@@ -30,7 +30,8 @@ export function computePricing(input: PricingInput): PricingBreakdown {
   const baseCents = toCents(input.plan.price);
   const locationCents = toCents(input.location.surcharge);
   const extraTimeCents = Math.floor(input.extraDurationMinutes / 30) * toCents(100);
-  const extraPeopleCents = input.groupSize > 1 ? (input.groupSize - 1) * toCents(7) : 0;
+  const extraPeopleCents =
+    input.groupSize > 1 ? (input.groupSize - 1) * toCents(input.plan.extraPersonPrice) : 0;
   const addonCents = input.addons.reduce((s, a) => s + toCents(a.price), 0);
   const totalCents =
     baseCents + locationCents + extraTimeCents + extraPeopleCents + addonCents;

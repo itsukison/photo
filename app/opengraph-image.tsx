@@ -74,7 +74,7 @@ export default async function Image() {
           }}
         >
           <span>studio-on.org</span>
-          <span style={{ color: '#000', fontWeight: 500 }}>From $150 · 60 edited photos</span>
+          <span style={{ color: '#000', fontWeight: 500 }}>From $70 · 60 edited photos</span>
         </div>
       </div>
     ),

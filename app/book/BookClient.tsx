@@ -552,9 +552,9 @@ export default function BookPage() {
     // Extra duration: $100 per 30 mins
     total += (booking.extraDuration / 30) * 100;
 
-    // Extra people: $7 per person beyond 1
+    // Extra people: per-plan rate per person beyond 1
     if (booking.groupSize > 1) {
-      total += (booking.groupSize - 1) * 7;
+      total += (booking.groupSize - 1) * (booking.plan?.extraPersonPrice ?? 0);
     }
 
     // Addons
@@ -1030,7 +1030,11 @@ export default function BookPage() {
           </div>
           <div>
             <div className="font-medium text-sm text-black">Number of People</div>
-            <div className="text-xs text-gray-500">Base price includes 1 person. +$7 per extra person. Max 10.</div>
+            <div className="text-xs text-gray-500">
+              {booking.plan && booking.plan.extraPersonPrice > 0
+                ? `Base price includes 1 person. +$${booking.plan.extraPersonPrice} per extra person. Max 10.`
+                : 'Base price includes additional people at no extra charge. Max 10.'}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -1265,7 +1269,7 @@ export default function BookPage() {
 
             <div className="flex justify-between">
               <span className="text-gray-500">Group Size ({booking.groupSize} people)</span>
-              <span className="text-black">{booking.groupSize > 1 ? `+$${(booking.groupSize - 1) * 7}` : 'Included'}</span>
+              <span className="text-black">{booking.groupSize > 1 && (booking.plan?.extraPersonPrice ?? 0) > 0 ? `+$${(booking.groupSize - 1) * (booking.plan?.extraPersonPrice ?? 0)}` : 'Included'}</span>
             </div>
 
             {booking.addons.map((addon) => (

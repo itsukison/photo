@@ -6,6 +6,7 @@ export type Plan = {
   name: string;
   price: number;
   originalPrice: number;
+  extraPersonPrice: number;
   duration: number;
   description: string;
   lens: string;
@@ -29,7 +30,7 @@ export type Addon = {
 export async function fetchPlans(): Promise<Plan[]> {
   const { data, error } = await supabase
     .from('plans')
-    .select('id, slug, name, price, duration_minutes, description, sort_order')
+    .select('id, slug, name, price, extra_person_price, duration_minutes, description, sort_order')
     .in('slug', ['quick', 'portrait', 'fisheye', 'signature', 'couple'])
     .order('sort_order', { ascending: true });
   if (error) throw error;
@@ -43,27 +44,35 @@ export async function fetchPlans(): Promise<Plan[]> {
   };
 
   const enrichedNames: Record<string, string> = {
-    quick: 'Quick Shot',
+    quick: 'Tokyo Quick Shot',
     portrait: 'Full Portrait Session',
     fisheye: 'Fish Eye Session',
     signature: 'Signature Session',
-    couple: 'Couple Session',
+    couple: 'Couple / Proposal Session',
   };
 
   const enrichedPrices: Record<string, number> = {
-    quick: 100,
-    portrait: 150,
-    fisheye: 200,
-    signature: 230,
-    couple: 250,
+    quick: 70,
+    portrait: 100,
+    fisheye: 150,
+    signature: 190,
+    couple: 300,
   };
 
   const enrichedOriginalPrices: Record<string, number> = {
-    quick: 120,
-    portrait: 180,
-    fisheye: 230,
-    signature: 290,
-    couple: 330,
+    quick: 90,
+    portrait: 130,
+    fisheye: 190,
+    signature: 240,
+    couple: 380,
+  };
+
+  const enrichedExtraPersonPrices: Record<string, number> = {
+    quick: 50,
+    portrait: 55,
+    fisheye: 60,
+    signature: 65,
+    couple: 0,
   };
 
   const enrichedMetadata: Record<string, { lens: string; photoCount: string }> = {
@@ -85,6 +94,7 @@ export async function fetchPlans(): Promise<Plan[]> {
       slug,
       name: enrichedNames[slug],
       price: enrichedPrices[slug],
+      extra_person_price: enrichedExtraPersonPrices[slug],
       duration_minutes: 50,
       description: enrichedDescriptions[slug],
       sort_order: 100 + idx, // Ensure they appear at the end
@@ -97,6 +107,7 @@ export async function fetchPlans(): Promise<Plan[]> {
     name: enrichedNames[p.slug as string] || (p.name as string),
     price: enrichedPrices[p.slug as string] || (p.price as number),
     originalPrice: enrichedOriginalPrices[p.slug as string] || enrichedPrices[p.slug as string] || (p.price as number),
+    extraPersonPrice: enrichedExtraPersonPrices[p.slug as string] ?? ((p.extra_person_price as number) || 0),
     duration: p.duration_minutes as number,
     description: enrichedDescriptions[p.slug as string] || ((p.description as string) ?? ''),
     lens: enrichedMetadata[p.slug as string]?.lens || 'Portrait Lens',

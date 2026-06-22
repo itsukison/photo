@@ -15,7 +15,7 @@ export const STUDIO = {
   foundingDate: '2024',
   email: 'studio.on.snap@gmail.com',
   phone: '+81-90-1295-4319',
-  priceRange: '$150–$300',
+  priceRange: '$70–$300',
   currenciesAccepted: 'USD, JPY',
   paymentAccepted: 'Credit Card (Stripe)',
   address: {

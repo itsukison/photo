@@ -9,6 +9,9 @@ export type Plan = {
   name: string;
   price: number;
   originalPrice: number;
+  // Price per additional person beyond the first. 0 means extra people are
+  // included at no charge (e.g. the Couple / Proposal package).
+  extraPersonPrice: number;
   duration: number;
   description: string;
   tagline: string;
@@ -19,9 +22,10 @@ export type Plan = {
 export const PLANS: Plan[] = [
   {
     slug: 'quick',
-    name: 'Quick Shot',
-    price: 100,
-    originalPrice: 120,
+    name: 'Tokyo Quick Shot',
+    price: 70,
+    originalPrice: 90,
+    extraPersonPrice: 50,
     duration: 30,
     tagline: '30 minutes, portrait lens',
     description: 'A 30-minute portrait session capturing clean, cinematic shots of Tokyo.',
@@ -31,8 +35,9 @@ export const PLANS: Plan[] = [
   {
     slug: 'portrait',
     name: 'Full Portrait Session',
-    price: 150,
-    originalPrice: 180,
+    price: 100,
+    originalPrice: 130,
+    extraPersonPrice: 55,
     duration: 50,
     tagline: '50 minutes, portrait lens',
     description: "A 50-minute portrait session across Tokyo's most iconic backdrops.",
@@ -42,8 +47,9 @@ export const PLANS: Plan[] = [
   {
     slug: 'fisheye',
     name: 'Fish Eye Session',
-    price: 200,
-    originalPrice: 230,
+    price: 150,
+    originalPrice: 190,
+    extraPersonPrice: 60,
     duration: 50,
     tagline: '50 minutes, signature fish-eye',
     description: 'A 50-minute creative session with our signature fish-eye lens for bold, wide-angle shots.',
@@ -53,8 +59,9 @@ export const PLANS: Plan[] = [
   {
     slug: 'signature',
     name: 'Signature Session',
-    price: 230,
-    originalPrice: 290,
+    price: 190,
+    originalPrice: 240,
+    extraPersonPrice: 65,
     duration: 50,
     tagline: '50 minutes, both lenses',
     description: 'A 50-minute session combining both lenses for a full range of cinematic shots.',
@@ -63,9 +70,10 @@ export const PLANS: Plan[] = [
   },
   {
     slug: 'couple',
-    name: 'Couple Session',
-    price: 250,
-    originalPrice: 330,
+    name: 'Couple / Proposal Session',
+    price: 300,
+    originalPrice: 380,
+    extraPersonPrice: 0,
     duration: 50,
     tagline: '50 minutes, couple story',
     description: 'A 50-minute couples shoot with both lenses, capturing your Tokyo story together.',

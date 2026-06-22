@@ -31,7 +31,7 @@ export const LOCATIONS: LocationContent[] = [
     shortLabel: 'Shibuya, Tokyo',
     metaTitle: 'Shibuya Photoshoot — Cinematic Portraits at Shibuya Crossing',
     metaDescription:
-      'Book a Shibuya photoshoot at Shibuya Crossing, Hachiko, and Center Gai with @ Studio ON. English-speaking Tokyo photographer, editorial style, from $150.',
+      'Book a Shibuya photoshoot at Shibuya Crossing, Hachiko, and Center Gai with @ Studio ON. English-speaking Tokyo photographer, editorial style, from $70.',
     heroImage: '/crossingsinglemain1.jpg',
     heroAlt: 'Editorial portrait of a solo traveler at Shibuya Crossing in Tokyo',
     galleryImages: [
@@ -68,7 +68,7 @@ export const LOCATIONS: LocationContent[] = [
       {
         question: 'How long should I plan for a Shibuya photoshoot?',
         answer:
-          'A 50-minute Full Portrait or Signature session covers the crossing plus two adjacent backdrops. Tight 30-minute Quick Shot sessions stay within the crossing-and-Hachiko radius.',
+          'A 50-minute Full Portrait or Signature session covers the crossing plus two adjacent backdrops. Tight 30-minute Tokyo Quick Shot sessions stay within the crossing-and-Hachiko radius.',
       },
       {
         question: 'Is Shibuya Crossing too crowded for clean photos?',

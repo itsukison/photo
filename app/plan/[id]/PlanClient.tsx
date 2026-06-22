@@ -123,7 +123,13 @@ export default function PlanDetailPage() {
                   const isPortrait = lensName.toLowerCase().includes('portrait');
                   const isFishEye = lensName.toLowerCase().includes('fish eye');
 
-                  const style = 'bg-black/5 text-notion-text-muted border-transparent';
+                  // Colour-code lenses so customers can tell sessions apart at a glance:
+                  // Portrait = bright yellow, Fish Eye = mint.
+                  const style = isPortrait
+                    ? 'bg-[#FDE047] text-[#5c4600] border-[#EAB308]'
+                    : isFishEye
+                      ? 'bg-[#A7F3D0] text-[#065F46] border-[#6EE7B7]'
+                      : 'bg-black/5 text-notion-text-muted border-transparent';
 
                   const displayLabel = isPortrait ? 'Portrait' : isFishEye ? 'Fish Eye' : lensName;
 
