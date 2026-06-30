@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Check } from 'lucide-react';
 import { stripe } from '@/lib/stripe';
 import { getAnonSupabase } from '@/lib/supabase-server';
+import { sendBookingNotifications } from '@/lib/booking-email';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -54,6 +55,15 @@ async function ensureBookingPaid(sessionId: string): Promise<{ reference: string
       p_payment_intent_id: piId,
       p_charge_id: chargeId,
     });
+  }
+
+  const bookingId = session.metadata?.booking_id || session.client_reference_id;
+  if (paid && bookingId) {
+    try {
+      await sendBookingNotifications(bookingId);
+    } catch (emailError) {
+      console.error('[success page] booking notifications failed', emailError);
+    }
   }
 
   return { reference: bookingRow.reference, name: bookingRow.client_name };

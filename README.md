@@ -78,14 +78,27 @@ lib/                    plans, pricing, data, supabase clients, seo
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase anon/publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase key used to load staff recipients and email delivery state |
 | `STRIPE_SECRET_KEY` | Stripe secret key (server-side) |
 | `STRIPE_WEBHOOK_SECRET` | Signing secret for the Stripe webhook |
 | `NEXT_PUBLIC_BASE_URL` | Public origin used for Stripe success/cancel URLs (optional; falls back to the request origin) |
+| `RESEND_API_KEY` | Server-only Resend API key for paid-booking notifications |
+| `RESEND_FROM_EMAIL` | Sender address on a Resend-verified domain |
+| `RESEND_FROM_NAME` | Sender display name (optional; defaults to `@ Studio ON`) |
+| `RESEND_REPLY_TO_EMAIL` | Reply-to address (optional; defaults to the sender address) |
 
 To exercise the webhook locally, forward Stripe events:
 ```bash
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
+
+### Booking confirmation emails
+
+Once Stripe marks a booking paid, the app sends a confirmation to the customer
+and a detailed notification to each active Membercheck worker. Delivery state is
+stored in `booking_email_notifications`, so webhook retries and the success-page
+fallback do not resend messages that were already delivered. Apply the Supabase
+migrations before deploying this feature.
 
 ## Scripts
 

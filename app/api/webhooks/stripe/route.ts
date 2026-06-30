@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 import { stripe, STRIPE_WEBHOOK_SECRET } from '@/lib/stripe';
 import { getAnonSupabase } from '@/lib/supabase-server';
+import { sendBookingNotifications } from '@/lib/booking-email';
 
 export const runtime = 'nodejs';
 
@@ -41,7 +42,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'event record failed' }, { status: 500 });
   }
   if (inserted === false) {
-    // Already seen — acknowledge.
+    // A previous attempt may have completed payment but failed to deliver an
+    // email. Re-run the idempotent notification service on duplicate events.
+    if (event.type === 'checkout.session.completed' && event.data.object.metadata?.kind !== 'reschedule_fee') {
+      await notifyForSession(event.data.object);
+    }
     return NextResponse.json({ received: true, duplicate: true });
   }
 
@@ -111,7 +116,28 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     p_payment_intent_id: paymentIntentId,
     p_charge_id: chargeId,
   });
-  if (error) console.error('[webhook] mark_booking_paid failed', error.message);
+  if (error) {
+    console.error('[webhook] mark_booking_paid failed', error.message);
+    return;
+  }
+
+  await notifyForSession(session);
+}
+
+async function notifyForSession(session: Stripe.Checkout.Session) {
+  const bookingId = session.metadata?.booking_id || session.client_reference_id;
+  if (!bookingId) {
+    console.warn('[webhook] paid checkout is missing a booking id', session.id);
+    return;
+  }
+
+  try {
+    await sendBookingNotifications(bookingId);
+  } catch (error) {
+    // Payment is already authoritative. Email delivery remains retryable via
+    // its database record and a duplicate Stripe event/success-page visit.
+    console.error('[webhook] booking notifications failed', error);
+  }
 }
 
 async function handleCheckoutExpired(session: Stripe.Checkout.Session) {
