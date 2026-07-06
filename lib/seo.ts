@@ -11,7 +11,7 @@ export const STUDIO = {
   legalName: SITE_LEGAL_NAME,
   description:
     '@ Studio ON is a Tokyo-based photography studio that produces cinematic, editorial portraits at Shibuya Crossing, Shinjuku, Harajuku, and Akihabara for travelers, couples, and creators.',
-  founder: 'Shion Park',
+  founder: '株式会社 Core7',
   foundingDate: '2024',
   email: 'studio.on.snap@gmail.com',
   phone: '+81-90-1295-4319',

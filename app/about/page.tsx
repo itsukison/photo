@@ -8,7 +8,7 @@ import { breadcrumbJsonLd, faqJsonLd, SITE_URL, STUDIO } from '@/lib/seo';
 export const metadata: Metadata = {
   title: 'About @ Studio ON — Tokyo Photographers',
   description:
-    'Meet @ Studio ON: a Tokyo-based photography studio crafting cinematic, editorial portraits across Shibuya, Shinjuku, Harajuku, and Akihabara. Founded by Shion Park.',
+    'Meet @ Studio ON: a Tokyo-based photography studio crafting cinematic, editorial portraits across Shibuya, Shinjuku, Harajuku, and Akihabara.',
   alternates: { canonical: '/about' },
   openGraph: {
     title: 'About @ Studio ON — Tokyo Photographers',
@@ -23,7 +23,7 @@ const ABOUT_FAQ = [
   {
     question: 'Who runs @ Studio ON?',
     answer:
-      '@ Studio ON was founded in 2024 by Shion Park, a Tokyo-based photographer focused on editorial portraiture. The studio operates from Setagaya and shoots across central Tokyo.',
+      '@ Studio ON is operated by 株式会社 Core7. The studio operates from Setagaya and shoots across central Tokyo.',
   },
   {
     question: 'What is your photography style?',
@@ -71,7 +71,7 @@ export default function AboutPage() {
               <strong className="text-black font-medium">@ Studio ON</strong> is a Tokyo-based photography studio that produces cinematic, editorial portraits across Shibuya, Shinjuku, Harajuku, and Akihabara for travelers, couples, and creators. Tokyo is our canvas — a city of contrasts where ancient shrines meet neon-drenched skyscrapers, and quiet tradition thrives amidst hyper-modernity.
             </p>
             <p>
-              Led by founder <strong className="text-black font-medium">Shion Park</strong> and our team of in-house photographers, the studio crafts aesthetic, high-end visual narratives specifically tailored for international travelers and clients seeking a polished editorial edge. Every session is treated as a guided journey through Tokyo, not a generic portrait shoot.
+              Operated by <strong className="text-black font-medium">株式会社 Core7</strong>, the studio crafts aesthetic, high-end visual narratives specifically tailored for international travelers and clients seeking a polished editorial edge. Every session is treated as a guided journey through Tokyo, not a generic portrait shoot.
             </p>
 
             <h2 className="text-2xl md:text-3xl font-medium text-black mt-12 md:mt-16 mb-4 md:mb-6 tracking-tight">
@@ -103,8 +103,8 @@ export default function AboutPage() {
               Studio details
             </h2>
             <dl className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-y-3 gap-x-6 text-base md:text-lg border-t border-black/10 pt-6">
-              <dt className="font-medium text-black">Founder</dt>
-              <dd>Shion Park</dd>
+              <dt className="font-medium text-black">Operator</dt>
+              <dd>株式会社 Core7</dd>
               <dt className="font-medium text-black">Founded</dt>
               <dd>{STUDIO.foundingDate}</dd>
               <dt className="font-medium text-black">Base</dt>

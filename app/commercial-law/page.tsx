@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function CommercialLawPage() {
   const content = [
-    { label: '代表責任者', value: '朴施穏' },
+    { label: '代表責任者', value: '株式会社 Core7' },
     { label: '所在地', value: '〒156-0053 東京都世田谷区桜3-9-24' },
     { label: '電話番号', value: '09012954319' },
     { label: 'メールアドレス', value: 'studio.on.snap@gmail.com' },
