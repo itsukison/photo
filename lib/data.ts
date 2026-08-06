@@ -120,7 +120,6 @@ export async function fetchPlans(): Promise<Plan[]> {
 const LOCATION_UUIDS = {
   shibuya:   '11111111-1111-1111-1111-111111111111',
   shinjuku:  '22222222-2222-2222-2222-222222222222',
-  akihabara: '33333333-3333-3333-3333-333333333333',
 } as const;
 
 export async function fetchLocations(): Promise<Location[]> {
@@ -134,8 +133,7 @@ export async function fetchLocations(): Promise<Location[]> {
   // "Seoul" is listed as coming-soon (frontend-only, not in DB).
   const CANONICAL_LOCATIONS: Location[] = [
     { id: LOCATION_UUIDS.shibuya,   name: 'Shibuya',   surcharge: 0 },
-    { id: LOCATION_UUIDS.shinjuku,  name: 'Shinjuku',  surcharge: 50 },
-    { id: LOCATION_UUIDS.akihabara, name: 'Akihabara', surcharge: 100 },
+    { id: LOCATION_UUIDS.shinjuku,  name: 'Shinjuku',  surcharge: 0 },
     { id: 'coming-soon-seoul',      name: 'Seoul',      surcharge: 0, isComingSoon: true },
   ];
 

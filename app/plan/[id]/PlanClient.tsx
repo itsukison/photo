@@ -110,7 +110,7 @@ export default function PlanDetailPage() {
             <div>
               <div className="text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.2em] mb-2.5 md:mb-4">Location</div>
               <div className="text-base md:text-lg font-medium tracking-tight text-black leading-snug">
-                Shibuya / Shinjuku / Akihabara <span className="text-notion-text-muted text-sm opacity-60">(Available)</span>
+                Shibuya / Shinjuku <span className="text-notion-text-muted text-sm opacity-60">(Available)</span>
               </div>
             </div>
 

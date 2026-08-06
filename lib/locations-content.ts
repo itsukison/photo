@@ -115,7 +115,7 @@ export const LOCATIONS: LocationContent[] = [
     bestTime:
       'Blue hour through full dark (roughly 18:00–21:00). Neon signage reads strongest once ambient light drops below the storefront output.',
     pairsWith: ['shibuya', 'akihabara'],
-    surchargeNote: 'Shinjuku adds a $50 location surcharge on all plans to cover travel time from the studio base in Setagaya.',
+    surchargeNote: 'Shinjuku is included on every plan at no extra location surcharge.',
     faq: [
       {
         question: 'Is Kabukicho safe for an after-dark photoshoot?',
@@ -279,7 +279,7 @@ export const LOCATIONS: LocationContent[] = [
     bestTime:
       'Blue hour into full dark (roughly 18:00–21:00), or Sunday afternoon during the pedestrian-zone hours when Chuo-dori is closed to cars.',
     pairsWith: ['shinjuku', 'ginza'],
-    surchargeNote: 'Akihabara adds a $100 location surcharge on all plans to cover travel time from the studio base in Setagaya.',
+    surchargeNote: 'Akihabara is available on request. Contact the studio via booking to confirm availability.',
     faq: [
       {
         question: 'Can we shoot in cosplay in Akihabara?',

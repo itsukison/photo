@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = `${plan.name} — Tokyo Photoshoot ($${plan.price})`;
-  const description = `${plan.description} ${plan.duration}-minute Tokyo session at Shibuya, Shinjuku, or Akihabara, ${plan.photoCount.toLowerCase()} delivered. Book online with @ Studio ON.`;
+  const description = `${plan.description} ${plan.duration}-minute Tokyo session at Shibuya or Shinjuku, ${plan.photoCount.toLowerCase()} delivered. Book online with @ Studio ON.`;
   const heroImage = planImages[plan.slug] ?? '/mainportrait.jpg';
 
   return {

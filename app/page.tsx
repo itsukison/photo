@@ -24,12 +24,12 @@ const HOME_FAQ = [
   {
     question: 'How much does a Tokyo photoshoot with @ Studio ON cost?',
     answer:
-      'Sessions start at $70 for a 30-minute Tokyo Quick Shot and run up to $300 for the Couple / Proposal Session, which includes both portrait and fish-eye lenses across a 50-minute shoot. Shibuya is included; Shinjuku adds $50 and Akihabara adds $100 for travel time.',
+      'Sessions start at $70 for a 30-minute Tokyo Quick Shot and run up to $300 for the Couple / Proposal Session, which includes both portrait and fish-eye lenses across a 50-minute shoot. Shibuya and Shinjuku are both included at no extra cost.',
   },
   {
     question: 'Where in Tokyo do you photograph?',
     answer:
-      'Default locations are Shibuya, Shinjuku, and Akihabara, all bookable directly. Harajuku, Asakusa, and Ginza are available on request. Each location has a dedicated guide page covering the best spots, the recommended time of day, and what to wear.',
+      'Default locations are Shibuya and Shinjuku, both bookable directly at no extra cost. Akihabara, Harajuku, Asakusa, and Ginza are available on request. Each location has a dedicated guide page covering the best spots, the recommended time of day, and what to wear.',
   },
   {
     question: 'Do I need to speak Japanese to book?',

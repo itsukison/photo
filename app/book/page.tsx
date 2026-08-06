@@ -6,12 +6,12 @@ import { breadcrumbJsonLd, SITE_URL } from '@/lib/seo';
 export const metadata: Metadata = {
   title: 'Book a Tokyo Photoshoot — Plan, Location & Date',
   description:
-    'Reserve a Tokyo photoshoot with @ Studio ON. Pick a plan, choose Shibuya, Shinjuku, or Akihabara, select a date, and pay securely via Stripe. From $70.',
+    'Reserve a Tokyo photoshoot with @ Studio ON. Pick a plan, choose Shibuya or Shinjuku, select a date, and pay securely via Stripe. From $70.',
   alternates: { canonical: '/book' },
   openGraph: {
     title: 'Book a Tokyo Photoshoot — @ Studio ON',
     description:
-      'Reserve your Tokyo session — Shibuya, Shinjuku, or Akihabara. Sessions from $70.',
+      'Reserve your Tokyo session — Shibuya or Shinjuku. Sessions from $70.',
     url: `${SITE_URL}/book`,
     type: 'website',
   },

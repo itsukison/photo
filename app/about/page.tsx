@@ -38,7 +38,7 @@ const ABOUT_FAQ = [
   {
     question: 'Where is the studio based?',
     answer:
-      'Our base is in Setagaya, Tokyo (156-0053). Sessions take place on location across Shibuya, Shinjuku, Akihabara, and on request Harajuku, Asakusa, or Ginza.',
+      'Our base is in Setagaya, Tokyo (156-0053). Sessions take place on location across Shibuya and Shinjuku by default, and on request across Akihabara, Harajuku, Asakusa, or Ginza.',
   },
 ];
 

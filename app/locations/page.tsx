@@ -101,7 +101,7 @@ export default function LocationsIndex() {
               How locations pair with plans
             </p>
             <p className="text-[17px] md:text-xl leading-[1.5] text-black max-w-2xl">
-              Shibuya is included on every plan. Shinjuku adds a $50 surcharge for travel; Akihabara adds $100. Harajuku, Asakusa, and Ginza are available on request — message the studio after picking your plan.
+              Shibuya and Shinjuku are included on every plan at no extra cost. Akihabara, Harajuku, Asakusa, and Ginza are available on request — message the studio after picking your plan.
             </p>
           </div>
         </section>
