@@ -36,8 +36,8 @@ export async function fetchPlans(): Promise<Plan[]> {
   if (error) throw error;
 
   const enrichedDescriptions: Record<string, string> = {
-    quick: 'A 30-minute portrait session capturing clean, cinematic shots of Tokyo.',
-    portrait: "A 50-minute portrait session across Tokyo's most iconic backdrops.",
+    quick: 'A 30-minute portrait session capturing natural, candid moments across 2–3 iconic Tokyo locations.',
+    portrait: 'A 50-minute portrait session capturing natural, candid moments across 4–5 iconic Tokyo locations.',
     fisheye: 'A 50-minute creative session with our signature fish-eye lens for bold, wide-angle shots.',
     signature: 'A 50-minute session combining both lenses for a full range of cinematic shots.',
     couple: 'A 50-minute couples shoot with both lenses, capturing your Tokyo story together.',
