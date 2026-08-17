@@ -15,11 +15,11 @@ type Props = {
 };
 
 const planImages: Record<string, string> = {
-  quick: '/mainportrait.jpg',
-  portrait: '/redneonportrait3.jpg',
-  fisheye: '/crossing_yellow.JPG',
-  signature: '/blackman_crossing.JPG',
-  couple: '/mighty_pink.JPG',
+  quick: '/quickshotmain.jpg',
+  portrait: '/fullportraitmain.jpg',
+  fisheye: '/fisheyemain.jpg',
+  signature: '/signaturemain.jpg',
+  couple: '/coupleproposal.jpg',
 };
 
 export function generateStaticParams() {
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${plan.name} — Tokyo Photoshoot ($${plan.price})`;
   const description = `${plan.description} ${plan.duration}-minute Tokyo session at Shibuya or Shinjuku, ${plan.photoCount.toLowerCase()} delivered. Book online with @ Studio ON.`;
-  const heroImage = planImages[plan.slug] ?? '/mainportrait.jpg';
+  const heroImage = planImages[plan.slug] ?? '/quickshotmain.jpg';
 
   return {
     title,
@@ -67,7 +67,7 @@ export default async function PlanPage({ params }: Props) {
 
   if (!plan) notFound();
 
-  const heroImage = planImages[plan.slug] ?? '/mainportrait.jpg';
+  const heroImage = planImages[plan.slug] ?? '/quickshotmain.jpg';
 
   return (
     <>

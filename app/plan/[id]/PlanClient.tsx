@@ -10,11 +10,11 @@ import { motion } from 'motion/react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const planImages: Record<string, string> = {
-  quick: '/mainportrait.jpg',
-  portrait: '/redneonportrait3.jpg',
-  fisheye: '/crossing_yellow.JPG',
-  signature: '/blackman_crossing.JPG',
-  couple: '/mighty_pink.JPG',
+  quick: '/quickshotmain.jpg',
+  portrait: '/fullportraitmain.jpg',
+  fisheye: '/fisheyemain.jpg',
+  signature: '/signaturemain.jpg',
+  couple: '/coupleproposal.jpg',
 };
 
 const secondaryImages: Record<string, string[]> = {

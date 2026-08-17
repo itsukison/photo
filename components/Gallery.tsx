@@ -12,27 +12,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 const planImages = [
   {
-    src: '/mainportrait.jpg',
+    src: '/quickshotmain.jpg',
     y: 24,
     speed: 0.8,
   },
   {
-    src: '/redneonportrait3.jpg',
+    src: '/fullportraitmain.jpg',
     y: 0,
     speed: 0.6,
   },
   {
-    src: '/crossing_yellow.JPG',
+    src: '/fisheyemain.jpg',
     y: 48,
     speed: 1.0,
   },
   {
-    src: '/blackman_crossing.JPG',
+    src: '/signaturemain.jpg',
     y: 12,
     speed: 0.7,
   },
   {
-    src: '/mighty_pink.JPG',
+    src: '/coupleproposal.jpg',
     y: 36,
     speed: 0.9,
   },

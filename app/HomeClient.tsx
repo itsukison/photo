@@ -29,8 +29,8 @@ const MOBILE_HERO_LAYERS: MobileHeroLayer[] = [
     className: 'left-[28vw] top-4 w-[42vw] aspect-[3/4] rotate-[4deg]',
   },
   {
-    src: '/mighty_pink.JPG',
-    alt: 'Couple editorial portrait at Shibuya Crossing, cinematic Tokyo photoshoot',
+    src: '/coupleproposal.jpg',
+    alt: 'Couple portrait beneath neon lights during a cinematic Tokyo photoshoot',
     className: 'right-1 top-12 w-[38vw] aspect-[3/4] rotate-[9deg]',
   },
 ];
@@ -77,7 +77,7 @@ function DesktopLanding() {
             className="absolute z-20 overflow-hidden flex items-center justify-center shadow-2xl"
           >
             <Image
-              src="/blackman_crossing.JPG"
+              src="/signaturemain.jpg"
               alt="Cinematic Tokyo photoshoot reel — Shibuya Crossing editorial portrait"
               fill
               priority
@@ -236,7 +236,7 @@ function MobileLanding() {
         <div className="rounded-[30px] bg-black p-3 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[24px]">
             <Image
-              src="/blackman_crossing.JPG"
+              src="/signaturemain.jpg"
               alt="Cinematic Tokyo photoshoot reel — Shibuya Crossing editorial portrait"
               fill
               className="object-cover"

@@ -15,8 +15,8 @@ const PHOTOS = [
     y: "15px",
     zIndex: 50,
     direction: "left" as Direction,
-    src: "/crossingcouple2.JPG",
-    alt: "Tokyo portrait session",
+    src: "/coupleproposal.jpg",
+    alt: "Couple portrait beneath neon lights during a cinematic Tokyo photoshoot",
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const PHOTOS = [
     y: "8px",
     zIndex: 30,
     direction: "right" as Direction,
-    src: "/crossing_yellow.JPG",
+    src: "/fisheyemain.jpg",
     alt: "Bold wide-angle Shibuya Crossing portrait, Tokyo",
   },
   {
