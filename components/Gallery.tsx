@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { fetchPlans, type Plan } from '@/lib/data';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/use-mobile';
+import stylingMainImage from '@/assets/stylingmain.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,17 +37,65 @@ const planImages = [
     y: 36,
     speed: 0.9,
   },
+  {
+    src: stylingMainImage,
+    y: 36,
+    speed: 0.9,
+  },
 ];
 
 export default function Gallery() {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
+  const comingSoonBadgeRef = useRef<HTMLSpanElement>(null);
   const imagesRef = useRef<(HTMLDivElement | null)[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
 
+  const flickerComingSoonBadge = () => {
+    const badge = comingSoonBadgeRef.current;
+    if (!badge) return;
+
+    gsap.killTweensOf(badge);
+    gsap.fromTo(
+      badge,
+      { autoAlpha: 1 },
+      {
+        autoAlpha: 0.2,
+        duration: 0.1,
+        repeat: 9,
+        yoyo: true,
+        ease: 'none',
+        onComplete: () => {
+          gsap.set(badge, { autoAlpha: 1 });
+        },
+      },
+    );
+  };
+
   useEffect(() => {
     fetchPlans()
-      .then(setPlans)
+      .then((fetchedPlans) => {
+        setPlans(
+          fetchedPlans.flatMap((plan) =>
+            plan.slug === 'couple'
+              ? [
+                  plan,
+                  {
+                    ...plan,
+                    name: 'Styling + Tokyo Photoshoot',
+                    price: 499,
+                    originalPrice: 590,
+                    description:
+                      'A 2-hour Tokyo fashion experience — get styled in Harajuku with your photographer/stylist, then finish with a stylish photoshoot at iconic Tokyo locations.',
+                    lens: 'Portrait + Fish Eye + Both',
+                    duration: 120,
+                    photoCount: '80 Edited Photos',
+                  },
+                ]
+              : [plan],
+          ),
+        );
+      })
       .catch(() => setPlans([]));
   }, []);
 
@@ -95,16 +144,30 @@ export default function Gallery() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 relative">
           {plans.map((plan, i) => {
             const imgData = planImages[i] || planImages[0];
+            const isStylingPackage = plan.name === 'Styling + Tokyo Photoshoot';
             return (
               <div
-                key={plan.id}
+                key={`${plan.id}-${i}`}
                 ref={(el) => {
                   imagesRef.current[i] = el;
                 }}
                 className={`relative w-full group ${isMobile ? 'mx-auto max-w-[340px]' : ''}`}
                 style={{ marginTop: isMobile ? `${(i % 2) * 12}px` : `${imgData.y}px` }}
               >
-                <Link href={`/plan/${plan.slug}`} className="block">
+                {isStylingPackage ? (
+                  <button
+                    type="button"
+                    aria-label="Styling + Tokyo Photoshoot is coming soon"
+                    onClick={flickerComingSoonBadge}
+                    className="absolute inset-0 z-20 cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
+                  />
+                ) : (
+                  <Link
+                    href={`/plan/${plan.slug}`}
+                    aria-label={`View ${plan.name}`}
+                    className="absolute inset-0 z-20 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
+                  />
+                )}
                   <div className="relative w-full aspect-[4/5] overflow-hidden rounded-2xl shadow-sm bg-notion-bg-hover mb-4 md:mb-6">
                     <Image
                       src={imgData.src}
@@ -114,6 +177,14 @@ export default function Gallery() {
                       referrerPolicy="no-referrer"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
+                    {isStylingPackage && (
+                      <span
+                        ref={comingSoonBadgeRef}
+                        className="absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-white/50 bg-white/90 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-black shadow-lg backdrop-blur-sm"
+                      >
+                        Coming Soon
+                      </span>
+                    )}
                   </div>
                   <div className="px-1">
                     {/* Top Row: Name & Price */}
@@ -151,16 +222,20 @@ export default function Gallery() {
                             const lensName = part.trim();
                             const isPortrait = lensName.toLowerCase().includes('portrait');
                             const isFishEye = lensName.toLowerCase().includes('fish eye');
-
+                            const isBoth = lensName.toLowerCase() === 'both';
                             // Colour-code lenses so customers can tell sessions apart at a glance:
                             // Portrait = bright yellow, Fish Eye = mint.
                             const style = isPortrait
                               ? 'bg-[#FDE047] text-[#5c4600] border-[#EAB308]'
                               : isFishEye
                                 ? 'bg-[#A7F3D0] text-[#065F46] border-[#6EE7B7]'
+                                : isBoth
+                                  ? 'bg-white text-notion-text-muted border-black/10'
                                 : 'bg-black/5 text-notion-text-muted border-transparent';
 
-                            const displayLabel = isPortrait
+                            const displayLabel = isStylingPackage
+                              ? lensName
+                              : isPortrait
                               ? 'Portrait Lens'
                               : isFishEye
                                 ? 'Fish Eye Lens'
@@ -173,7 +248,7 @@ export default function Gallery() {
                                 </span>
                                 {idx < arr.length - 1 && (
                                   <span className="text-[10px] font-bold text-notion-text-muted opacity-60">
-                                    +
+                                    {isStylingPackage ? 'or' : '+'}
                                   </span>
                                 )}
                               </div>
@@ -188,7 +263,7 @@ export default function Gallery() {
                           Duration
                         </span>
                         <span className="px-2.5 py-1 rounded-full bg-black/5 text-[10px] font-bold text-notion-text-muted uppercase tracking-[0.1em] border border-transparent">
-                          {plan.duration} Min
+                          {plan.name === 'Styling + Tokyo Photoshoot' ? '2 Hours' : `${plan.duration} Min`}
                         </span>
                       </div>
 
@@ -203,7 +278,6 @@ export default function Gallery() {
                       </div>
                     </div>
                   </div>
-                </Link>
               </div>
             );
           })}
