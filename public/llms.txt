@@ -38,7 +38,7 @@
 2. Customer pays via Stripe; the slot is held for 30 minutes during checkout.
 3. Studio assigns a photographer and confirms the booking via email.
 4. Shoot occurs at the agreed Tokyo location.
-5. Edited photos are delivered via private cloud gallery within 5–7 days.
+5. Edited photos are delivered via private cloud gallery within 2 weeks.
 
 ## Cancellation policy
 

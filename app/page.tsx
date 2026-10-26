@@ -29,7 +29,7 @@ const HOME_FAQ = [
   {
     question: 'Where in Tokyo do you photograph?',
     answer:
-      'Default locations are Shibuya and Shinjuku, both bookable directly at no extra cost. Akihabara, Harajuku, Asakusa, and Ginza are available on request. Each location has a dedicated guide page covering the best spots, the recommended time of day, and what to wear.',
+      'Default locations are Shibuya and Shinjuku, both bookable directly at no extra cost. Each location has a dedicated guide page covering the best spots, the recommended time of day, and what to wear.',
   },
   {
     question: 'Do I need to speak Japanese to book?',
@@ -44,7 +44,7 @@ const HOME_FAQ = [
   {
     question: 'When will I receive my edited photos?',
     answer:
-      'Edited photos are delivered within 5–7 days via a private cloud gallery. All originals are also included, and clients receive full commercial rights to the final images.',
+      'Edited photos are delivered within 2 weeks via a private cloud gallery. All originals are also included, and clients receive full commercial rights to the final images.',
   },
   {
     question: 'What is the cancellation policy?',
@@ -59,7 +59,7 @@ const HOME_FAQ = [
   {
     question: 'What should I wear for a Tokyo photoshoot?',
     answer:
-      'Solid, mid-saturation colors read best across Shibuya and Shinjuku neon. Avoid all-white tops under saturated signage. For Harajuku, fashion-forward looks work well; for Asakusa, kimono or muted earth tones suit the temple grounds.',
+      'Solid, mid-saturation colors read best across Shibuya and Shinjuku neon. Avoid all-white tops under saturated signage.',
   },
 ];
 
