@@ -58,7 +58,7 @@ export default async function Image() {
               display: 'flex',
             }}
           >
-            Editorial portrait sessions at Shibuya, Shinjuku, Harajuku &amp; Akihabara.
+            Editorial portrait sessions at Shibuya, Shinjuku.
           </div>
         </div>
 

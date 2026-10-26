@@ -197,7 +197,7 @@ function MobileLanding() {
           Cinematic Tokyo Moments
         </h1>
         <p className="relative z-10 mx-auto mt-5 max-w-[32ch] text-center text-sm leading-relaxed text-black/65">
-          Editorial portrait sessions at Shibuya, Shinjuku, Harajuku &amp; Akihabara — for travelers who want frames that feel timeless.
+          Editorial portrait sessions at Shibuya, Shinjuku — for travelers who want frames that feel timeless.
         </p>
 
         <div className="relative mt-6 h-[40svh] min-h-[250px]">
