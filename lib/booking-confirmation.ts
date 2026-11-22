@@ -63,6 +63,8 @@ export function confirmationIneligibility(booking: ConfirmationBooking, payment:
   if (!/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(booking.client_email)) return 'invalid-recipient';
   if (payment.billingEmail && payment.billingEmail.trim().toLowerCase() !== booking.client_email.trim().toLowerCase()) return 'payment-email-mismatch';
   if (!MEETING_POINTS[booking.locationName.trim().toLowerCase()]) return 'meeting-point-needs-review';
+  const questions = booking.requests.flatMap(note => note.split(/(?<=[?.!])\s+|\n/)).filter(note => /\?|\b(?:can you|could you|would you|is it possible|how much|when will|do you|are you)\b/i.test(note));
+  if (questions.some(question => !/\b(?:pose|poses|posing|outfits?|clothes|clothing|what to wear)\b/i.test(question))) return 'customer-question-needs-review';
   if (!booking.sessionName || !Number.isInteger(booking.group_size) || booking.group_size < 1 || !Number.isInteger(booking.start_minutes) || !Number.isInteger(booking.end_minutes) || booking.start_minutes < 0 || booking.end_minutes > 1440 || booking.end_minutes <= booking.start_minutes) return 'invalid-session-details';
   const shootStart = Date.parse(`${booking.date}T00:00:00+09:00`) + booking.start_minutes * 60_000;
   if (!Number.isFinite(shootStart) || shootStart <= now) return 'session-not-in-future';

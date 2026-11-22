@@ -22,6 +22,13 @@ test('only a later, matching, paid booking is eligible', () => {
   }
 });
 
+test('verified Checkout discounts are accepted and unrelated questions are held', () => {
+  assert.equal(confirmationIneligibility(booking,{...payment,amountReceived:24000,amountExpected:24000,amountBeforeDiscount:27000},now),null);
+  assert.ok(confirmationIneligibility(booking,{...payment,amountReceived:24000,amountExpected:24000,amountBeforeDiscount:28000},now));
+  assert.equal(confirmationIneligibility({...booking,requests:['Can you help us with posing?', 'What outfits should we wear?']},payment,now),null);
+  assert.equal(confirmationIneligibility({...booking,requests:['When will all edited photos be delivered?']},payment,now),'customer-question-needs-review');
+});
+
 test('customer template matches the approved typography, details and optional sections', () => {
   const plain = renderBookingConfirmation(booking);
   assert.equal(plain.subject, 'Studio ON - Tokyo Photoshoot Booking Confirmation');
