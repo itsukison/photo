@@ -1,0 +1,31 @@
+import { timingSafeEqual } from 'node:crypto';
+import { NextRequest, NextResponse } from 'next/server';
+import { normalizeResendSender } from '@/lib/booking-confirmation';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+// Read-only server preflight. No customer data, sends, claims or test bookings.
+// The existing privileged server credential is required; never put it in a URL.
+export async function GET(request: NextRequest) {
+  const expected = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supplied = request.headers.get('authorization')?.replace(/^Bearer /, '') ?? '';
+  if (!expected || supplied.length !== expected.length || !timingSafeEqual(Buffer.from(supplied), Buffer.from(expected))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  let from: string | null = null;
+  try { from = normalizeResendSender(process.env.RESEND_FROM_EMAIL, process.env.RESEND_FROM_NAME?.trim() || 'Studio ON'); } catch { /* Report validation only. */ }
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, {
+    headers: { apikey: expected, Authorization: `Bearer ${expected}` },
+    cache: 'no-store', signal: AbortSignal.timeout(10_000),
+  });
+  const schema = response.ok ? await response.json() as { paths?: Record<string, unknown> } : null;
+  const databaseLedgerReady = Boolean(schema?.paths?.['/booking_email_notifications']);
+  return NextResponse.json({
+    version: 'booking-confirmation-once-v1',
+    sender: from, senderValid: Boolean(from),
+    mailProviderConfigured: Boolean(process.env.RESEND_API_KEY),
+    stripeConfigured: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
+    databaseLedgerReady,
+  }, { headers: { 'Cache-Control': 'no-store' } });
+}

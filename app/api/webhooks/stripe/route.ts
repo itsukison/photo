@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   if (inserted === false) {
     // A previous attempt may have completed payment but failed to deliver an
     // email. Re-run the idempotent notification service on duplicate events.
-    if (event.type === 'checkout.session.completed' && event.data.object.metadata?.kind !== 'reschedule_fee') {
+    if ((event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') && event.data.object.payment_status === 'paid' && event.data.object.metadata?.kind !== 'reschedule_fee') {
       await notifyForSession(event.data.object);
     }
     return NextResponse.json({ received: true, duplicate: true });
@@ -52,7 +52,8 @@ export async function POST(req: NextRequest) {
 
   try {
     switch (event.type) {
-      case 'checkout.session.completed': {
+      case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded': {
         await handleCheckoutCompleted(event.data.object);
         break;
       }
@@ -85,6 +86,7 @@ export async function POST(req: NextRequest) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  if (session.payment_status !== 'paid') return;
   const kind = session.metadata?.kind;
   const supabase = getAnonSupabase();
 
@@ -117,8 +119,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     p_charge_id: chargeId,
   });
   if (error) {
-    console.error('[webhook] mark_booking_paid failed', error.message);
-    return;
+    throw new Error('Could not mark paid booking');
   }
 
   await notifyForSession(session);
@@ -131,13 +132,9 @@ async function notifyForSession(session: Stripe.Checkout.Session) {
     return;
   }
 
-  try {
-    await sendBookingNotifications(bookingId);
-  } catch (error) {
-    // Payment is already authoritative. Email delivery remains retryable via
-    // its database record and a duplicate Stripe event/success-page visit.
-    console.error('[webhook] booking notifications failed', error);
-  }
+  // Explicit provider rejections may be retried by Stripe. The permanent
+  // database claim prevents a duplicate delivery after an uncertain response.
+  await sendBookingNotifications(bookingId);
 }
 
 async function handleCheckoutExpired(session: Stripe.Checkout.Session) {
