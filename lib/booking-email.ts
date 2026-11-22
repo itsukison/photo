@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { v5 as uuidV5 } from 'uuid';
 import { getAdminSupabase } from '@/lib/supabase-server';
 import { stripe } from '@/lib/stripe';
@@ -32,6 +32,7 @@ type BookingForEmail = {
   status: string;
   payment_status: string;
   stripe_payment_intent_id: string | null;
+  stripe_checkout_session_id: string | null;
   total_price: number;
   plan: RelatedName;
   location: RelatedName;
@@ -50,91 +51,6 @@ const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 function relatedName(value: RelatedName): string | null {
   if (Array.isArray(value)) return value[0]?.name ?? null;
   return value?.name ?? null;
-}
-
-function escapeHtml(value: unknown): string {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-function formatMinutes(minutes: number): string {
-  return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
-}
-
-function formatDate(date: string): string {
-  return new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Tokyo',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(`${date}T00:00:00+09:00`));
-}
-
-function emailRows(booking: BookingForEmail, internal: boolean): Array<[string, string]> {
-  const addons = (booking.booking_addons ?? [])
-    .map((item) => relatedName(item.addon))
-    .filter((name): name is string => Boolean(name))
-    .join(', ');
-
-  const rows: Array<[string, string]> = [
-    ['Booking reference', booking.reference],
-    ['Session', relatedName(booking.plan) ?? 'Photo session'],
-    ['Date', `${formatDate(booking.date)} (Tokyo time)`],
-    ['Time', `${formatMinutes(booking.start_minutes)}–${formatMinutes(booking.end_minutes)} JST`],
-    ['Location', relatedName(booking.location) ?? 'To be confirmed'],
-    ['Group size', `${booking.group_size} ${booking.group_size === 1 ? 'person' : 'people'}`],
-    ['Extra duration', booking.extra_duration_minutes ? `${booking.extra_duration_minutes} minutes` : 'None'],
-    ['Add-ons', addons || 'None'],
-    ['Total paid', `$${Number(booking.total_price).toFixed(2)} USD`],
-    ['Assigned worker', relatedName(booking.assigned_member) ?? 'Unassigned'],
-    ['Special requests', booking.special_requests?.trim() || 'None'],
-    ['Retouch notes', booking.retouch_notes?.trim() || 'None'],
-  ];
-
-  if (internal) {
-    rows.splice(1, 0,
-      ['Customer', booking.client_name],
-      ['Customer email', booking.client_email],
-      ['Customer phone', booking.client_phone || 'Not provided'],
-      ['Customer country', booking.client_country || 'Not provided'],
-    );
-  }
-
-  return rows;
-}
-
-function renderEmail(booking: BookingForEmail, internal: boolean): EmailContent {
-  if (!internal) return renderCustomerEmail(booking);
-
-  const rows = emailRows(booking, internal);
-  const heading = 'New paid booking';
-  const intro = 'A new booking has been paid and is ready for review in Membercheck.';
-
-  const htmlRows = rows.map(([label, value]) => `
-    <tr>
-      <td style="padding:10px 12px;border-bottom:1px solid #e8e6e1;color:#666;vertical-align:top">${escapeHtml(label)}</td>
-      <td style="padding:10px 12px;border-bottom:1px solid #e8e6e1;color:#111;font-weight:600;vertical-align:top">${escapeHtml(value)}</td>
-    </tr>`).join('');
-
-  return {
-    subject: `New booking ${booking.reference} — ${booking.client_name}`,
-    html: `<!doctype html>
-<html><body style="margin:0;background:#f7f6f3;font-family:Arial,sans-serif;color:#111">
-  <div style="max-width:640px;margin:0 auto;padding:32px 16px">
-    <div style="background:#fff;border:1px solid #e8e6e1;border-radius:12px;padding:28px">
-      <p style="margin:0 0 8px;color:#777;font-size:13px;letter-spacing:.08em;text-transform:uppercase">@ Studio ON</p>
-      <h1 style="margin:0 0 16px;font-size:28px">${escapeHtml(heading)}</h1>
-      <p style="margin:0 0 24px;line-height:1.6;color:#444">${escapeHtml(intro)}</p>
-      <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px">${htmlRows}</table>
-    </div>
-  </div>
-</body></html>`,
-    text: `${heading}\n\n${intro}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join('\n')}`,
-  };
 }
 
 function confirmationBooking(booking: BookingForEmail): ConfirmationBooking {
@@ -157,8 +73,7 @@ function sender(): string {
 
 function idempotencyKey(bookingId: string, type: string, recipient: string): string {
   if (type === 'customer') return `booking-${bookingId}-customer-confirmation`;
-  const recipientHash = createHash('sha256').update(recipient.toLowerCase()).digest('hex').slice(0, 20);
-  return `booking-${bookingId}-${type}-${recipientHash}`;
+  throw new Error('Only customer confirmation emails are enabled');
 }
 
 async function claimNotification(
@@ -182,7 +97,7 @@ async function claimNotification(
   // Respect receipts made by the older server and confirmations imported from
   // Gmail. Legacy failed records are held for reconciliation, never guessed.
   const previous = await supabase.from('booking_email_notifications')
-    .select('id, status, attempt_token, attempt_count')
+    .select('id, status, attempt_token, attempt_count, last_error')
     .eq('booking_id', bookingId).eq('recipient_type', recipientType);
   if (previous.error) throw new Error('Could not read booking delivery history');
   const relevant = (previous.data ?? []).filter(row => recipientType === 'customer' || row.id === id);
@@ -199,6 +114,7 @@ async function claimNotification(
   // permits one retry winner; 'sending' never expires, including after timeout.
   const current = relevant.find(row => row.id === id && row.status === 'failed');
   if (!current) return null;
+  if (!current.last_error?.startsWith('EXPLICIT_REJECTION_V1: ')) throw new Error('Unverified rejection needs delivery reconciliation');
   const claimed = await supabase.from('booking_email_notifications')
     .update({ ...values, attempt_count: current.attempt_count + 1, last_error: null })
     .eq('id', id).eq('status', 'failed').eq('attempt_token', current.attempt_token)
@@ -249,7 +165,7 @@ async function deliver(
       return { ok: response.ok, status: response.status, id: result.id, message: result.message || result.error?.message };
     },
     sent: (claim, messageId) => updateClaim(claim, { status: 'sent', resend_email_id: messageId, sent_at: new Date().toISOString(), last_error: null }),
-    rejected: (claim, reason) => updateClaim(claim, { status: 'failed', last_error: reason }),
+    rejected: (claim, reason) => updateClaim(claim, { status: 'failed', last_error: `EXPLICIT_REJECTION_V1: ${reason}` }),
     // Keep 'sending' after uncertain outcomes. Even after days, retries must
     // reconcile the provider receipt instead of risking another customer mail.
     uncertain: (claim, reason) => updateClaim(claim, { last_error: reason }),
@@ -263,43 +179,43 @@ export async function sendBookingNotifications(bookingId: string): Promise<void>
   }
 
   const supabase = getAdminSupabase();
-  const [{ data: bookingData, error: bookingError }, { data: members, error: membersError }] = await Promise.all([
-    supabase
-      .from('bookings')
-      .select(`
-        id, reference, client_name, client_email, client_phone, client_country,
-        special_requests, retouch_notes, date, start_minutes, end_minutes,
-        extra_duration_minutes, group_size, status, payment_status, total_price, stripe_payment_intent_id,
-        plan:plans(name),
-        location:locations(name),
-        assigned_member:members!bookings_assigned_member_id_fkey(name),
-        booking_addons(price_snapshot, addon:addons(name))
-      `)
-      .eq('id', bookingId)
-      .maybeSingle(),
-    supabase
-      .from('members')
-      .select('email')
-      .eq('status', 'Active'),
-  ]);
+  const { data: bookingData, error: bookingError } = await supabase
+    .from('bookings')
+    .select(`
+      id, reference, client_name, client_email, client_phone, client_country,
+      special_requests, retouch_notes, date, start_minutes, end_minutes,
+      extra_duration_minutes, group_size, status, payment_status, total_price,
+      stripe_payment_intent_id, stripe_checkout_session_id,
+      plan:plans(name), location:locations(name),
+      assigned_member:members!bookings_assigned_member_id_fkey(name),
+      booking_addons(price_snapshot, addon:addons(name))
+    `)
+    .eq('id', bookingId)
+    .maybeSingle();
 
   if (bookingError || !bookingData) {
     throw new Error('Booking email lookup failed');
   }
-  if (membersError) {
-    console.error('[booking-email] Active member lookup failed', membersError.message);
-  }
 
   const booking = bookingData as unknown as BookingForEmail;
-  if (!booking.stripe_payment_intent_id) return;
+  if (!booking.stripe_payment_intent_id || !booking.stripe_checkout_session_id) return;
   // Read Stripe directly, then cross-check the same canonical booking rows
   // Membercheck displays. Never trust only the webhook's embedded snapshot.
-  const payment = await stripe.paymentIntents.retrieve(booking.stripe_payment_intent_id, { expand: ['latest_charge'] });
+  const [payment, checkout] = await Promise.all([
+    stripe.paymentIntents.retrieve(booking.stripe_payment_intent_id, { expand: ['latest_charge'] }),
+    stripe.checkout.sessions.retrieve(booking.stripe_checkout_session_id),
+  ]);
+  const checkoutPaymentId = typeof checkout.payment_intent === 'string' ? checkout.payment_intent : checkout.payment_intent?.id;
+  if (checkoutPaymentId !== payment.id || checkout.client_reference_id !== booking.id || checkout.metadata?.booking_id !== booking.id || checkout.metadata?.booking_reference !== booking.reference || checkout.payment_status !== 'paid' || checkout.currency !== payment.currency) {
+    console.warn('[booking-email] Checkout and booking mismatch', booking.reference);
+    return;
+  }
   const charge = payment.latest_charge;
   if (!charge || typeof charge === 'string') throw new Error('Payment charge could not be verified');
   const reason = confirmationIneligibility(confirmationBooking(booking), {
     id: payment.id, created: payment.created, status: payment.status,
     currency: payment.currency, amountReceived: payment.amount_received,
+    amountBeforeDiscount: checkout.amount_subtotal ?? undefined, amountExpected: checkout.amount_total ?? undefined,
     bookingId: payment.metadata.booking_id, reference: payment.metadata.booking_reference,
     kind: payment.metadata.kind, paid: charge.paid,
     refunded: charge.refunded || charge.amount_refunded > 0, disputed: charge.disputed,
@@ -310,23 +226,6 @@ export async function sendBookingNotifications(bookingId: string): Promise<void>
     return;
   }
 
-  const recipients = Array.from(new Set(
-    (members ?? [])
-      .map((member) => String(member.email ?? '').trim().toLowerCase())
-      .filter(Boolean),
-  ));
-
-  const jobs: Array<Promise<void>> = [];
-  if (booking.client_email?.trim()) {
-    jobs.push(deliver(booking, 'customer', booking.client_email.trim(), renderEmail(booking, false)));
-  }
-  for (const email of recipients) {
-    jobs.push(deliver(booking, 'staff', email, renderEmail(booking, true)));
-  }
-
-  const results = await Promise.allSettled(jobs);
-  const failures = results.filter((result) => result.status === 'rejected');
-  if (failures.length) {
-    throw new Error(`${failures.length} of ${jobs.length} booking notification(s) need retry or review`);
-  }
+  // This workflow is authorized to send one customer confirmation only.
+  await deliver(booking, 'customer', booking.client_email.trim(), renderCustomerEmail(booking));
 }

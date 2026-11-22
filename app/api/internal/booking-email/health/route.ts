@@ -22,23 +22,52 @@ export async function GET(request: NextRequest) {
   });
   const schema = response.ok ? await response.json() as { paths?: Record<string, unknown> } : null;
   const databaseLedgerReady = Boolean(schema?.paths?.['/booking_email_notifications']);
+  let providerReadStatus: number | null = null;
   let providerDomains: Array<{ name: string; status: string }> | null = null;
   if (process.env.RESEND_API_KEY) {
     const domainsResponse = await fetch('https://api.resend.com/domains', {
       headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY.trim()}` },
       cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(10_000),
     });
+    providerReadStatus = domainsResponse.status;
     if (domainsResponse.ok) {
       const domains = await domainsResponse.json() as { data?: Array<{ name: string; status: string }> };
       providerDomains = (domains.data ?? []).map(({ name, status }) => ({ name, status }));
     }
   }
   return NextResponse.json({
-    senderCandidates, providerDomains,
+    senderCandidates, providerDomains, providerReadStatus,
     version: 'booking-confirmation-once-v1',
     sender: from, senderValid: Boolean(from),
     mailProviderConfigured: Boolean(process.env.RESEND_API_KEY),
     stripeConfigured: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
     databaseLedgerReady,
   }, { headers: { 'Cache-Control': 'no-store' } });
+}
+
+// Provider-owned simulated delivery address. No customer or staff receives a
+// test email. This preflight is unavailable on the production deployment.
+export async function POST(request: NextRequest) {
+  if (process.env.VERCEL_ENV !== 'preview') return NextResponse.json({ error: 'Not available' }, { status: 405 });
+  const expected = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supplied = request.headers.get('authorization')?.replace(/^Bearer /, '') ?? '';
+  if (!expected || supplied.length !== expected.length || !timingSafeEqual(Buffer.from(supplied), Buffer.from(expected))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST', redirect: 'error', signal: AbortSignal.timeout(20_000),
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY?.trim()}`,
+      'Content-Type': 'application/json',
+      'Idempotency-Key': 'studio-on-realtime-preflight-20261122-v1',
+    },
+    body: JSON.stringify({
+      from: normalizeResendSender(process.env.RESEND_FROM_EMAIL),
+      to: ['delivered@resend.dev'],
+      subject: 'Studio ON email delivery preflight',
+      text: 'Synthetic preflight only. No customer or booking data.',
+    }),
+  });
+  const result = await response.json() as { id?: string; name?: string; message?: string };
+  return NextResponse.json({ accepted: response.ok && Boolean(result.id), providerStatus: response.status, messageId: result.id, errorName: result.name, message: result.message }, { headers: { 'Cache-Control': 'no-store' } });
 }

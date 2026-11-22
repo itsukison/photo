@@ -27,6 +27,8 @@ export type ConfirmationPayment = {
   status: string;
   currency: string;
   amountReceived: number;
+  amountBeforeDiscount?: number;
+  amountExpected?: number;
   bookingId?: string;
   reference?: string;
   kind?: string;
@@ -55,7 +57,9 @@ export function confirmationIneligibility(booking: ConfirmationBooking, payment:
   if (payment.kind !== 'booking' || payment.bookingId !== booking.id || payment.reference !== booking.reference || payment.id !== booking.stripe_payment_intent_id) return 'payment-booking-mismatch';
   if (booking.payment_status !== 'paid' || !['pending_confirmation', 'confirmed'].includes(booking.status)) return 'booking-not-ready';
   if (payment.status !== 'succeeded' || !payment.paid || payment.refunded || payment.disputed) return 'payment-not-clear';
-  if (payment.currency !== 'usd' || !Number.isFinite(booking.total_price) || payment.amountReceived !== Math.round(booking.total_price * 100)) return 'payment-amount-mismatch';
+  const listedAmount = Math.round(booking.total_price * 100);
+  const expectedAmount = payment.amountExpected ?? listedAmount;
+  if (payment.currency !== 'usd' || !Number.isFinite(booking.total_price) || (payment.amountBeforeDiscount ?? listedAmount) !== listedAmount || !Number.isInteger(expectedAmount) || expectedAmount <= 0 || expectedAmount > listedAmount || payment.amountReceived !== expectedAmount) return 'payment-amount-mismatch';
   if (!/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(booking.client_email)) return 'invalid-recipient';
   if (payment.billingEmail && payment.billingEmail.trim().toLowerCase() !== booking.client_email.trim().toLowerCase()) return 'payment-email-mismatch';
   if (!MEETING_POINTS[booking.locationName.trim().toLowerCase()]) return 'meeting-point-needs-review';
