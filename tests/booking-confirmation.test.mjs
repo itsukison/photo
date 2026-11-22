@@ -31,7 +31,7 @@ test('verified Checkout discounts are accepted and unrelated questions are held'
 
 test('customer template matches the approved typography, details and optional sections', () => {
   const plain = renderBookingConfirmation(booking);
-  assert.equal(plain.subject, 'Studio ON - Tokyo Photoshoot Booking Confirmation');
+  assert.equal(plain.subject, 'Studio ON - Tokyo Photoshoot Booking Confirmation — SHN-NEW');
   assert.match(plain.html, /font-family:Arial,Helvetica,sans-serif;font-size:12px/);
   assert.match(plain.text, /November 27, 2026/);
   assert.match(plain.text, /8:30 PM – 9:20 PM \(50min\)/);
@@ -50,6 +50,23 @@ test('customer template matches the approved typography, details and optional se
   assert.match(shinjuku.text,/1 person/);
   assert.match(shinjuku.text,/Right below the cat board building/);
   assert.doesNotMatch(shinjuku.text,/Hachiko/);
+});
+
+test('different bookings stay separate even for the same customer and identical message bodies', () => {
+  const first = renderBookingConfirmation(booking);
+  const second = renderBookingConfirmation({...booking, id:'booking-2', reference:'SHN-SECOND'});
+  assert.notEqual(first.subject, second.subject);
+  assert.notEqual(first.headers['X-Entity-Ref-ID'], second.headers['X-Entity-Ref-ID']);
+  assert.equal(first.html, second.html, 'identical guidance should not make different reservations share a conversation');
+  for (const content of [first, second]) {
+    assert.deepEqual(Object.keys(content.headers), ['X-Entity-Ref-ID']);
+    assert.doesNotMatch(content.html, /<blockquote|gmail_quote|gmail_attr|In-Reply-To|References:/i);
+    assert.match(content.text, /Looking forward to meeting you and creating amazing photos together!/);
+    assert.match(content.text, /TikTok: @studio.on.snap/);
+  }
+  const retry = renderBookingConfirmation(booking);
+  assert.equal(retry.subject, first.subject);
+  assert.deepEqual(retry.headers, first.headers, 'retries must keep the same provider idempotency payload');
 });
 
 test('both existing Vercel sender formats produce exactly one mailbox', () => {

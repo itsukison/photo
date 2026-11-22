@@ -6,7 +6,7 @@ import { getAdminSupabase } from '@/lib/supabase-server';
 import { stripe } from '@/lib/stripe';
 import {
   confirmationIneligibility, deliverClaimedEmail, normalizeResendSender,
-  renderBookingConfirmation, type ConfirmationBooking, type DeliveryClaim,
+  renderBookingConfirmation, type ConfirmationBooking, type DeliveryClaim, type EmailContent,
 } from '@/lib/booking-confirmation';
 
 type RelatedName = { name: string } | { name: string }[] | null;
@@ -38,12 +38,6 @@ type BookingForEmail = {
   location: RelatedName;
   assigned_member: RelatedName;
   booking_addons: BookingAddon[];
-};
-
-type EmailContent = {
-  subject: string;
-  html: string;
-  text: string;
 };
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
@@ -164,6 +158,7 @@ async function deliver(
             : undefined,
           reply_to: process.env.RESEND_REPLY_TO_EMAIL?.trim() || OWNER_NOTIFICATION_EMAIL,
           subject: content.subject, html: content.html, text: content.text,
+          headers: content.headers,
           tags: [{ name: 'booking_id', value: booking.id }, { name: 'recipient_type', value: recipientType }],
         }),
       });

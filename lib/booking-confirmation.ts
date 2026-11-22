@@ -38,7 +38,7 @@ export type ConfirmationPayment = {
   billingEmail?: string | null;
 };
 
-export type EmailContent = { subject: string; html: string; text: string };
+export type EmailContent = { subject: string; html: string; text: string; headers: Record<string, string> };
 
 const MEETING_POINTS: Record<string, { text: string; url: string }> = {
   shibuya: { text: 'In front of the Hachiko Statue', url: 'https://maps.app.goo.gl/fYHE22SnFcjZqNxk6' },
@@ -95,7 +95,10 @@ export function renderBookingConfirmation(booking: ConfirmationBooking): EmailCo
   const closing = 'Looking forward to meeting you and creating amazing photos together!';
   const e = escapeEmailHtml;
   return {
-    subject: 'Studio ON - Tokyo Photoshoot Booking Confirmation',
+    subject: `Studio ON - Tokyo Photoshoot Booking Confirmation — ${booking.reference}`,
+    // Stable for retries, unique for every reservation. These are independent
+    // confirmations, so never attach In-Reply-To or References from another mail.
+    headers: { 'X-Entity-Ref-ID': `studio-on-confirmation-${encodeURIComponent(booking.id)}` },
     text: `Hi,\n\nThis is Studio ON 😊\n\nYour booking for the ${booking.sessionName} in ${booking.locationName} is confirmed for:\n\n📅 ${date}\n🕣 ${time}\n👥 Number of Guests: ${guests}\n\n📍 Meeting Point (${booking.locationName}):\n${meeting.text}\n${meeting.url}${addonsText}${requestsText}\n\n${coordination}\n\n${notifications}\n\n${questions}\n\n${closing}\n\nBest,\nStudio ON\n📧 studio.on.snap@gmail.com\nIG: @studio.on.snap\nTikTok: @studio.on.snap`,
     html: `<div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#222;background:#fff">
 <p>Hi,</p><p>This is Studio ON 😊</p>
