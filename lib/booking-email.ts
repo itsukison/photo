@@ -47,6 +47,7 @@ type EmailContent = {
 };
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
+const OWNER_NOTIFICATION_EMAIL = 'studio.on.snap@gmail.com';
 
 function relatedName(value: RelatedName): string | null {
   if (Array.isArray(value)) return value[0]?.name ?? null;
@@ -156,7 +157,12 @@ async function deliver(
         },
         body: JSON.stringify({
           from, to: [recipientEmail],
-          reply_to: process.env.RESEND_REPLY_TO_EMAIL?.trim() || 'studio.on.snap@gmail.com',
+          // The owner receives the same new confirmation in Gmail. Avoid a
+          // duplicate recipient when the owner is already the booked customer.
+          cc: recipientType === 'customer' && recipientEmail.trim().toLowerCase() !== OWNER_NOTIFICATION_EMAIL
+            ? [OWNER_NOTIFICATION_EMAIL]
+            : undefined,
+          reply_to: process.env.RESEND_REPLY_TO_EMAIL?.trim() || OWNER_NOTIFICATION_EMAIL,
           subject: content.subject, html: content.html, text: content.text,
           tags: [{ name: 'booking_id', value: booking.id }, { name: 'recipient_type', value: recipientType }],
         }),
