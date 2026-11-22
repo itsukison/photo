@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
   if (!expected || supplied.length !== expected.length || !timingSafeEqual(Buffer.from(supplied), Buffer.from(expected))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const senderCandidates = process.env.RESEND_FROM_EMAIL?.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) ?? [];
   let from: string | null = null;
   try { from = normalizeResendSender(process.env.RESEND_FROM_EMAIL, process.env.RESEND_FROM_NAME?.trim() || 'Studio ON'); } catch { /* Report validation only. */ }
   const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, {
@@ -21,7 +22,19 @@ export async function GET(request: NextRequest) {
   });
   const schema = response.ok ? await response.json() as { paths?: Record<string, unknown> } : null;
   const databaseLedgerReady = Boolean(schema?.paths?.['/booking_email_notifications']);
+  let providerDomains: Array<{ name: string; status: string }> | null = null;
+  if (process.env.RESEND_API_KEY) {
+    const domainsResponse = await fetch('https://api.resend.com/domains', {
+      headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY.trim()}` },
+      cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(10_000),
+    });
+    if (domainsResponse.ok) {
+      const domains = await domainsResponse.json() as { data?: Array<{ name: string; status: string }> };
+      providerDomains = (domains.data ?? []).map(({ name, status }) => ({ name, status }));
+    }
+  }
   return NextResponse.json({
+    senderCandidates, providerDomains,
     version: 'booking-confirmation-once-v1',
     sender: from, senderValid: Boolean(from),
     mailProviderConfigured: Boolean(process.env.RESEND_API_KEY),

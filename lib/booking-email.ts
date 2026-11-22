@@ -257,6 +257,7 @@ async function deliver(
 }
 
 export async function sendBookingNotifications(bookingId: string): Promise<void> {
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') return;
   if (!process.env.RESEND_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error('Booking email notifications are not configured');
   }
