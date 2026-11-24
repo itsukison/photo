@@ -77,6 +77,14 @@ test('unchanged bookings cause no writes on later scheduled runs',()=>{
   assert.equal(rt.calls.length,0);assert.equal(rt.stats.unchanged,1);
 });
 
+test('Google may omit default opaque transparency without indicating a booking change',()=>{
+  const rt=runtime(); const {transparency,...wireEvent}=record.event;
+  rt.run(record,[{calendarId:record.calendarId,event:{...wireEvent,id:'existing'}}]);
+  assert.equal(rt.calls.length,0);assert.equal(rt.stats.unchanged,1);
+  rt.run(record,[{calendarId:record.calendarId,event:{...wireEvent,id:'existing',transparency:'transparent'}}]);
+  assert.deepEqual(rt.calls.map(x=>x.action),['patch']);
+});
+
 test('a changed photographer moves the existing event instead of copying it',()=>{
   const rt=runtime({moveResult:{...record.event,id:'existing'}});
   rt.run(record,[{calendarId:CALENDAR_IDS[otherId],event:{...record.event,id:'existing'}}]);

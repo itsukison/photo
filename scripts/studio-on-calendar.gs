@@ -67,7 +67,9 @@ function studioOnBookingId(event) {
 }
 
 function studioOnEventMatches(event, wanted) {
-  return ['summary', 'description', 'location', 'transparency'].every(k => event[k] === wanted[k]) &&
+  // Google may omit the default opaque value from its response.
+  return ['summary', 'description', 'location'].every(k => event[k] === wanted[k]) &&
+    (event.transparency || 'opaque') === wanted.transparency &&
     Date.parse(event.start.dateTime) === Date.parse(wanted.start.dateTime) && Date.parse(event.end.dateTime) === Date.parse(wanted.end.dateTime) &&
     !(event.attendees || []).length && !event.conferenceData && !event.hangoutLink &&
     studioOnBookingId(event) === wanted.extendedProperties.private.studio_on_booking_id &&
